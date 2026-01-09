@@ -71,6 +71,8 @@ class TimeSphere:
         self,
         initial_inputs: AxiomInputs,
         metadata: Optional[Dict[str, Any]] = None,
+        *,
+        clamp_to_unit: bool = True,
     ):
         """
         Initialize TimeSphere with starting conditions.
@@ -81,11 +83,14 @@ class TimeSphere:
             Starting values for A, B, C, X, Y, Z, E_n, F_n
         metadata : optional dict
             Additional metadata about the system
+        clamp_to_unit : bool
+            Whether to clamp/normalize inputs when computing intelligence.
         """
         self.initial_state = SystemState(step=0, inputs=initial_inputs, metadata=metadata or {})
         self.update_rules: Dict[str, Callable[[SystemState, int], float]] = {}
         self.event_handlers: List[Callable[[SystemState, int], Optional[str]]] = []
         self.history: List[TimeStep] = []
+        self.clamp_to_unit = clamp_to_unit
 
     def add_update_rule(self, variable: str, rule: Callable[[SystemState, int], float]):
         """
@@ -139,7 +144,9 @@ class TimeSphere:
 
         # Compute intelligence with components
         intelligence_score, components = compute_intelligence(
-            **new_inputs.to_dict(), return_components=True
+            **new_inputs.to_dict(),
+            return_components=True,
+            clamp_to_unit=self.clamp_to_unit,
         )
 
         # Create new state
@@ -187,7 +194,9 @@ class TimeSphere:
 
         # Record initial state
         initial_score, initial_components = compute_intelligence(
-            **current_state.inputs.to_dict(), return_components=True
+            **current_state.inputs.to_dict(),
+            return_components=True,
+            clamp_to_unit=self.clamp_to_unit,
         )
         initial_snapshot = IntelligenceSnapshot(
             step=0, score=initial_score, components=initial_components

@@ -7,6 +7,7 @@ Models a learner developing intelligence over time through:
 - Increasing capability and output (Y, Z growth)
 - Energy and feedback growing over time
 """
+from axiom.core_equation import compute_intelligence
 from engine.timesphere import TimeSphere, UpdateRules
 from engine.state import AxiomInputs
 
@@ -17,6 +18,23 @@ def run_basic_growth_scenario():
     print("=" * 60)
     print("SCENARIO 1: Basic Growth - A Learner's Journey")
     print("=" * 60)
+    print("\nStrict vs clamped demo:")
+    demo_inputs = dict(
+        A=1.2,
+        B=0.4,
+        C=0.5,
+        X=0.7,
+        Y=0.3,
+        Z=0.5,
+        E_n=2.0,
+        F_n=-1.2,
+    )
+    clamped_score = compute_intelligence(**demo_inputs, clamp_to_unit=True)
+    print(f"  Clamped score (A/F_n adjusted): {clamped_score:.4f}")
+    try:
+        compute_intelligence(**demo_inputs, clamp_to_unit=False)
+    except ValueError as exc:
+        print(f"  Strict mode rejected inputs: {exc}")
 
     # Initial state: Beginner with solid foundation but low skills
     initial_inputs = AxiomInputs(

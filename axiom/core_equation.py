@@ -82,6 +82,8 @@ def compute_intelligence(
         Inputs to the formula.
     validate : whether to check numeric types and some simple bounds.
     clamp_to_unit : if True, clamp A/B/C/X/Y to [0,1] and Z/E_n >= 0, F_n >= -1.
+        If False and validate=True, inputs are treated as strict and any out-of-bounds
+        values raise a ValueError.
     return_components : if True return (score, components_dict).
 
     Returns
@@ -107,6 +109,24 @@ def compute_intelligence(
         # F_n may be negative but not less than -1 (so that (1+F_n) >= 0)
         inputs["F_n"] = max(-1.0, float(inputs["F_n"]))
     else:
+        if validate:
+            errors = []
+            unit_keys = ("A", "B", "C", "X", "Y")
+            for key in unit_keys:
+                value = float(inputs[key])
+                if not 0.0 <= value <= 1.0:
+                    errors.append(f"{key}={value} not in [0, 1]")
+            z_val = float(inputs["Z"])
+            if z_val < 0.0:
+                errors.append(f"Z={z_val} must be >= 0")
+            e_val = float(inputs["E_n"])
+            if e_val < 0.0:
+                errors.append(f"E_n={e_val} must be >= 0")
+            f_val = float(inputs["F_n"])
+            if f_val < -1.0:
+                errors.append(f"F_n={f_val} must be >= -1")
+            if errors:
+                raise ValueError("Strict bounds violation: " + "; ".join(errors))
         for k in inputs:
             inputs[k] = float(inputs[k])
 
