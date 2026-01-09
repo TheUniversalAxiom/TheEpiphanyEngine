@@ -11,6 +11,7 @@ const summary = document.getElementById("summary");
 const errorMessage = document.getElementById("error");
 
 const inputFields = ["A", "B", "C", "X", "Y", "Z", "E_n", "F_n", "steps"];
+let currentScenario = null;
 
 function setFormValues(values) {
   inputFields.forEach((key) => {
@@ -39,6 +40,7 @@ function populateScenarios() {
 }
 
 function setScenario(scenario) {
+  currentScenario = scenario;
   scenarioDescription.textContent = scenario.description;
   setFormValues(scenario.inputs);
 }
@@ -85,6 +87,7 @@ form.addEventListener("submit", async (event) => {
     const value = document.getElementById(key).value;
     payload[key] = key === "steps" ? Number.parseInt(value, 10) : Number.parseFloat(value);
   });
+  payload.preset = currentScenario?.preset || scenarioSelect.value;
 
   try {
     const result = await runSimulation(payload);

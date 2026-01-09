@@ -1,6 +1,7 @@
 export const scenarios = [
   {
     id: "basic-growth",
+    preset: "basic-growth",
     name: "Basic Growth · Learner's Journey",
     description: "Steady improvements with balanced foundations and context.",
     inputs: {
@@ -17,6 +18,7 @@ export const scenarios = [
   },
   {
     id: "corruption-decay",
+    preset: "corruption-decay",
     name: "Corruption & Decay · Downward Spiral",
     description: "A strong system begins to lose alignment and objectivity.",
     inputs: {
@@ -33,6 +35,7 @@ export const scenarios = [
   },
   {
     id: "divergent-paths",
+    preset: "divergent-paths",
     name: "Divergent Paths · Identical Starts",
     description: "Balanced inputs to compare diverging trajectories.",
     inputs: {
@@ -49,6 +52,7 @@ export const scenarios = [
   },
   {
     id: "ai-alignment",
+    preset: "ai-alignment",
     name: "AI Alignment · Capability vs Values",
     description: "An early AI system with strong capacity and rising feedback.",
     inputs: {
