@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Epiphany Engine | Axiom Simulator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div>
+          <h1>Axiom Simulation Console</h1>
+          <p class="subtitle">
+            Explore intelligence trajectories by tuning Axiom inputs and simulating the TimeSphere.
+          </p>
+        </div>
+      </header>
+
+      <section class="panel">
+        <h2>Scenario presets</h2>
+        <div class="field">
+          <label for="scenario">Pick a scenario</label>
+          <select id="scenario"></select>
+          <p class="hint" id="scenario-description"></p>
+        </div>
+      </section>
+
+      <section class="panel grid">
+        <div>
+          <h2>Inputs</h2>
+          <form id="axiom-form" class="form-grid">
+            <div class="field">
+              <label for="A">A · Alignment</label>
+              <input id="A" name="A" type="number" min="0" max="1" step="0.01" required />
+            </div>
+            <div class="field">
+              <label for="B">B · Behavior</label>
+              <input id="B" name="B" type="number" min="0" max="1" step="0.01" required />
+            </div>
+            <div class="field">
+              <label for="C">C · Capacity</label>
+              <input id="C" name="C" type="number" min="0" max="1" step="0.01" required />
+            </div>
+            <div class="field">
+              <label for="X">X · Objectivity</label>
+              <input id="X" name="X" type="number" min="0" max="1" step="0.01" required />
+            </div>
+            <div class="field">
+              <label for="Y">Y · Yield</label>
+              <input id="Y" name="Y" type="number" min="0" max="1" step="0.01" required />
+            </div>
+            <div class="field">
+              <label for="Z">Z · Zero-error</label>
+              <input id="Z" name="Z" type="number" min="0" max="1" step="0.01" required />
+            </div>
+            <div class="field">
+              <label for="E_n">Eₙ · Energy</label>
+              <input id="E_n" name="E_n" type="number" min="0" step="0.1" required />
+            </div>
+            <div class="field">
+              <label for="F_n">Fₙ · Feedback</label>
+              <input id="F_n" name="F_n" type="number" step="0.1" required />
+            </div>
+            <div class="field">
+              <label for="steps">Steps</label>
+              <input id="steps" name="steps" type="number" min="1" max="250" step="1" value="10" required />
+            </div>
+            <div class="actions">
+              <button type="submit">Run simulation</button>
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <h2>Intelligence trajectory</h2>
+          <div class="chart-wrapper">
+            <canvas id="chart" width="520" height="280"></canvas>
+          </div>
+          <div class="summary" id="summary">
+            <p>Run a simulation to see the trajectory summary.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Component breakdown</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>ABC</th>
+                <th>XYZ</th>
+                <th>E_factor</th>
+              </tr>
+            </thead>
+            <tbody id="components-body">
+              <tr>
+                <td colspan="4" class="empty">No data yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="error" id="error"></p>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
