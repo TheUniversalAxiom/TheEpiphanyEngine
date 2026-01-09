@@ -7,9 +7,9 @@ Models a system experiencing corruption:
 - Behaviors becoming misaligned (B decreases)
 - Eventually leading to intelligence collapse
 """
-from engine.timesphere import TimeSphere, UpdateRules
-from engine.state import AxiomInputs
-from axiom.subjectivity_scale import x_from_observations, label_x
+from epiphany_engine.engine.timesphere import TimeSphere, UpdateRules
+from epiphany_engine.engine.state import AxiomInputs
+from epiphany_engine.axiom.subjectivity_scale import x_from_observations, label_x
 
 
 def run_corruption_scenario():

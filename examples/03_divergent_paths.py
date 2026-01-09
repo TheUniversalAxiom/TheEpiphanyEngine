@@ -7,9 +7,9 @@ Compares two systems starting from identical conditions:
 
 Demonstrates how different update rules lead to vastly different outcomes.
 """
-from engine.timesphere import TimeSphere, UpdateRules
-from engine.state import AxiomInputs
-from axiom.subjectivity_scale import label_x
+from epiphany_engine.engine.timesphere import TimeSphere, UpdateRules
+from epiphany_engine.engine.state import AxiomInputs
+from epiphany_engine.axiom.subjectivity_scale import label_x
 
 
 def run_divergent_paths_scenario():

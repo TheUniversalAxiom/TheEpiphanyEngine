@@ -5,9 +5,8 @@ Uses the axiom to evaluate potential next features and prioritize development.
 """
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent))
 
-from axiom.core_equation import compute_intelligence
+from epiphany_engine.axiom.core_equation import compute_intelligence
 
 
 def analyze_current_state():

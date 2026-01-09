@@ -4,7 +4,7 @@ Meta-application: Analyzing TheEpiphanyEngine project itself using the axiom.
 This script demonstrates applying the intelligence framework to assess
 the project's current state and identify optimal next steps.
 """
-from axiom.core_equation import compute_intelligence
+from epiphany_engine.axiom.core_equation import compute_intelligence
 
 # Assess current project state through axiom lens
 def analyze_project_intelligence():

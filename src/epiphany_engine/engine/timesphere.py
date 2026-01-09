@@ -9,8 +9,8 @@ Allows systems to evolve over discrete time steps while tracking:
 """
 from typing import List, Dict, Any, Optional, Callable
 from dataclasses import dataclass, field
-from axiom.core_equation import compute_intelligence, e_recurrence, fibonacci
-from engine.state import SystemState, AxiomInputs, IntelligenceSnapshot
+from epiphany_engine.axiom.core_equation import compute_intelligence, e_recurrence, fibonacci
+from epiphany_engine.engine.state import SystemState, AxiomInputs, IntelligenceSnapshot
 
 
 @dataclass

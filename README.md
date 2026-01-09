@@ -70,6 +70,16 @@ Project Intelligence Score: **3.20** (increased 5453% through axiom-guided devel
 
 ## Getting started
 
+### Installation
+
+```bash
+# Install in editable/development mode
+pip install -e .
+
+# Or install directly (once published to PyPI)
+pip install epiphany-engine
+```
+
 ### Quick Start
 
 ```bash
@@ -86,8 +96,11 @@ python axiom_analysis.py
 ### Basic Usage
 
 ```python
-from engine.timesphere import TimeSphere, UpdateRules
-from engine.state import AxiomInputs
+from epiphany_engine import TimeSphere, UpdateRules, AxiomInputs
+
+# Or import from submodules
+# from epiphany_engine.engine.timesphere import TimeSphere, UpdateRules
+# from epiphany_engine.engine.state import AxiomInputs
 
 # Define initial state
 initial = AxiomInputs(

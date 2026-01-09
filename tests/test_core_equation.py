@@ -4,9 +4,8 @@ Tests for axiom/core_equation.py
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from axiom.core_equation import (
+from epiphany_engine.axiom.core_equation import (
     compute_intelligence,
     e_recurrence,
     e_sequence,

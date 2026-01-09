@@ -8,8 +8,8 @@ Models an AI system's intelligence evolution with focus on alignment:
 
 Demonstrates the critical balance between capability (Y, Z) and alignment (A, X).
 """
-from engine.timesphere import TimeSphere, UpdateRules
-from engine.state import AxiomInputs
+from epiphany_engine.engine.timesphere import TimeSphere, UpdateRules
+from epiphany_engine.engine.state import AxiomInputs
 
 
 def run_ai_alignment_scenario():

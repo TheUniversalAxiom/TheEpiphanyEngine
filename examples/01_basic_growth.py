@@ -7,8 +7,8 @@ Models a learner developing intelligence over time through:
 - Increasing capability and output (Y, Z growth)
 - Energy and feedback growing over time
 """
-from engine.timesphere import TimeSphere, UpdateRules
-from engine.state import AxiomInputs
+from epiphany_engine.engine.timesphere import TimeSphere, UpdateRules
+from epiphany_engine.engine.state import AxiomInputs
 
 
 def run_basic_growth_scenario():
