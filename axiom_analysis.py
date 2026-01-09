@@ -22,6 +22,8 @@ def analyze_project_intelligence():
     - F_n: Feedback loops (tests, examples, validation)
     """
 
+    # Current repo highlights: TimeSphere engine is implemented, examples run scenarios,
+    # and tests validate core math + simulation behavior.
     # Current state assessment (0-1 scale for most, >= 0 for E_n, >= -1 for F_n)
     current_state = {
         "A": 0.8,  # Strong: Core axiom math is well-defined
