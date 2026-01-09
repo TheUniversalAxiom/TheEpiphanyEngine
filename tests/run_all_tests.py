@@ -26,6 +26,7 @@ def main():
     test_files = [
         "test_core_equation.py",
         "test_timesphere.py",
+        "test_bugfixes.py",
     ]
 
     all_passed = True

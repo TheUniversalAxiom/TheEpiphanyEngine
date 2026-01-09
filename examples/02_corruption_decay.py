@@ -38,32 +38,34 @@ def run_corruption_scenario():
 
     # Define corruption dynamics
     # A decays as values corrupt
-    sphere.add_update_rule("A", UpdateRules.decay(rate=0.08, min_val=0.1))
+    sphere.add_update_rule("A", UpdateRules.decay("A", rate=0.08, min_val=0.1))
 
     # B decays as behaviors misalign
-    sphere.add_update_rule("B", UpdateRules.decay(rate=0.06, min_val=0.2))
+    sphere.add_update_rule("B", UpdateRules.decay("B", rate=0.06, min_val=0.2))
 
     # C remains relatively stable (infrastructure doesn't degrade as fast)
-    sphere.add_update_rule("C", UpdateRules.decay(rate=0.02, min_val=0.5))
+    sphere.add_update_rule("C", UpdateRules.decay("C", rate=0.02, min_val=0.5))
 
-    # X decays (increasing subjectivity) - key corruption indicator
+    # X decays (losing objectivity as noise/emotion/bias increase) - key corruption indicator
     def x_corruption_rule(state, step):
         # Simulate increasing noise, emotion, bias over time
         noise = min(1.0, 0.1 * step)
         emotion = min(1.0, 0.08 * step)
         bias = min(1.0, 0.06 * step)
+        # x_from_observations returns objectivity (inverse of subjectivity)
+        # Higher noise/emotion/bias → lower objectivity
         return x_from_observations(noise=noise, emotional_volatility=emotion, bias_indicator=bias)
 
     sphere.add_update_rule("X", x_corruption_rule)
 
     # Y decays as output quality degrades
-    sphere.add_update_rule("Y", UpdateRules.decay(rate=0.10, min_val=0.1))
+    sphere.add_update_rule("Y", UpdateRules.decay("Y", rate=0.10, min_val=0.1))
 
     # Z decays as errors increase
-    sphere.add_update_rule("Z", UpdateRules.decay(rate=0.07, min_val=0.3))
+    sphere.add_update_rule("Z", UpdateRules.decay("Z", rate=0.07, min_val=0.3))
 
     # E_n decays (losing energy/momentum)
-    sphere.add_update_rule("E_n", UpdateRules.decay(rate=0.05, min_val=1.0))
+    sphere.add_update_rule("E_n", UpdateRules.decay("E_n", rate=0.05, min_val=1.0))
 
     # F_n decays as feedback loops break down
     sphere.add_update_rule("F_n", lambda s, step: max(0.0, s.inputs.F_n - 0.3))

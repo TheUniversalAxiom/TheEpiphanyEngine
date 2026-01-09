@@ -77,8 +77,8 @@ def test_decay_simulation():
     sphere = TimeSphere(initial_inputs=inputs)
 
     # Add decay rules
-    sphere.add_update_rule("A", UpdateRules.decay(rate=0.1, min_val=0.1))
-    sphere.add_update_rule("B", UpdateRules.decay(rate=0.1, min_val=0.1))
+    sphere.add_update_rule("A", UpdateRules.decay("A", rate=0.1, min_val=0.1))
+    sphere.add_update_rule("B", UpdateRules.decay("B", rate=0.1, min_val=0.1))
 
     result = sphere.simulate(steps=5)
 

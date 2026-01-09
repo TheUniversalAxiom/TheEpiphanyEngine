@@ -1,5 +1,9 @@
 """
-7-threshold subjectivity → objectivity scale and helpers.
+7-threshold objectivity scale and helpers.
+
+X represents OBJECTIVITY (alignment with objective truth).
+- X = 1.0: Fully objective (no bias, no noise, no emotion)
+- X = 0.0: Fully subjective (maximum bias, noise, emotion)
 
 Provides:
 - x_from_observations(noise, emotional_volatility, bias_indicator, weights=...)
@@ -11,16 +15,16 @@ from typing import Tuple, Dict, Iterable, Optional
 Number = float
 
 # Define 7 thresholds (edges) dividing the [0,1] interval into 7 buckets.
-# We will treat x in [0,1], where 0 = fully objective, 1 = fully subjective.
+# X in [0,1], where 0 = fully subjective, 1 = fully objective.
 DEFAULT_THRESHOLDS = [0.0, 0.15, 0.33, 0.5, 0.67, 0.85, 1.0]
 DEFAULT_LABELS = [
-    "apex-objective",  # 0.0 - 0.15
-    "objective",       # 0.15 - 0.33
-    "base-static",     # 0.33 - 0.50
-    "mid-dynamic",     # 0.50 - 0.67
-    "high-subjective", # 0.67 - 0.85
-    "apex-dynamic",    # 0.85 - 1.0
-    "apex-subjective", # exact 1.0 (optional)
+    "apex-subjective",  # 0.0 - 0.15: Maximum subjectivity
+    "high-subjective",  # 0.15 - 0.33: High subjectivity
+    "mid-dynamic",      # 0.33 - 0.50: Moderate subjectivity
+    "base-static",      # 0.50 - 0.67: Slight subjectivity
+    "objective",        # 0.67 - 0.85: Mostly objective
+    "high-objective",   # 0.85 - 1.0: High objectivity
+    "apex-objective",   # ~1.0: Maximum objectivity
 ]
 
 
@@ -39,34 +43,54 @@ def x_from_observations(
     normalize: bool = True,
 ) -> float:
     """
-    Derive a subjectivity score X in [0,1] from observation-level signals.
+    Derive an objectivity score X in [0,1] from observation-level signals.
+
+    X represents OBJECTIVITY (inverse of subjectivity).
+    Higher noise, emotion, and bias reduce objectivity.
 
     Parameters
     ----------
     noise : float
-        Observational noise; higher noise -> more subjectivity.
+        Observational noise; higher noise -> lower objectivity.
     emotional_volatility : float
-        Measure of transient affect; higher -> more subjectivity.
+        Measure of transient affect; higher emotion -> lower objectivity.
     bias_indicator : float
-        Measure of detected systemic bias; higher -> more subjectivity.
+        Measure of detected systemic bias; higher bias -> lower objectivity.
     weights : optional dict to weight components, keys: 'noise', 'emotion', 'bias'
     normalize : if True, scale the computed value to [0,1] by simple heuristic.
 
     Returns
     -------
-    float in [0,1]
+    float in [0,1] where 1.0 = fully objective, 0.0 = fully subjective
     """
-    if weights is None:
-        weights = {"noise": 0.4, "emotion": 0.35, "bias": 0.25}
+    # Default weights for subjectivity indicators
+    default_weights = {"noise": 0.4, "emotion": 0.35, "bias": 0.25}
 
-    # Basic linear combination; input signals can be any non-negative number.
-    score = weights["noise"] * float(noise) + weights["emotion"] * float(emotional_volatility) + weights["bias"] * float(bias_indicator)
+    if weights is None:
+        weights = default_weights
+    else:
+        # Use provided weights with defaults for missing keys (fixes Issue #4)
+        weights = {
+            "noise": weights.get("noise", default_weights["noise"]),
+            "emotion": weights.get("emotion", default_weights["emotion"]),
+            "bias": weights.get("bias", default_weights["bias"]),
+        }
+
+    # Calculate subjectivity score (higher = more subjective)
+    subjectivity = (
+        weights["noise"] * float(noise) +
+        weights["emotion"] * float(emotional_volatility) +
+        weights["bias"] * float(bias_indicator)
+    )
 
     if normalize:
-        # Heuristic normalization: assume typical input ranges on [0,1]; if sum exceeds 1, compress
-        score = _clamp01(score)
+        # Normalize to [0,1]
+        subjectivity = _clamp01(subjectivity)
 
-    return float(score)
+    # Return OBJECTIVITY (inverse of subjectivity)
+    objectivity = 1.0 - subjectivity
+
+    return float(objectivity)
 
 
 def label_x(x: float, thresholds: Optional[Iterable[float]] = None, labels: Optional[Iterable[str]] = None) -> str:

@@ -176,7 +176,8 @@ class TimeSphere:
         steps : int
             Number of time steps to simulate
         record_history : bool
-            Whether to keep full history (default True)
+            Whether to keep full history (default True).
+            If False, only initial and final states are recorded.
 
         Returns
         -------
@@ -200,12 +201,18 @@ class TimeSphere:
         )
         history.append(initial_timestep)
 
-        # Simulate each step
+        # Simulate each step, tracking final timestep separately
+        final_timestep = initial_timestep
         for step_num in range(1, steps + 1):
             timestep = self.step(current_state, step_num)
             if record_history:
                 history.append(timestep)
+            final_timestep = timestep
             current_state = timestep.state
+
+        # Ensure final timestep is in history (even if record_history=False)
+        if not record_history and steps > 0:
+            history.append(final_timestep)
 
         # Generate summary statistics
         intelligence_scores = [ts.intelligence.score for ts in history]
@@ -284,12 +291,22 @@ class UpdateRules:
         return lambda state, step: value
 
     @staticmethod
-    def linear_growth(rate: float, max_val: float = 1.0) -> Callable[[SystemState, int], float]:
-        """Linear growth with optional cap."""
+    def linear_growth(variable: str, rate: float, max_val: float = 1.0) -> Callable[[SystemState, int], float]:
+        """
+        Linear growth with optional cap.
 
+        Parameters
+        ----------
+        variable : str
+            The variable to update (e.g., "A", "B", "C", etc.)
+        rate : float
+            Growth rate per step
+        max_val : float
+            Maximum value (default 1.0)
+        """
         def rule(state: SystemState, step: int) -> float:
             inputs = state.inputs.to_dict()
-            current = inputs.get("A", 0.0)  # default lookup
+            current = inputs.get(variable, 0.0)
             new_val = current + rate
             return min(max_val, max(0.0, new_val))
 
@@ -310,12 +327,22 @@ class UpdateRules:
         return lambda state, step: float(fibonacci(step))
 
     @staticmethod
-    def decay(rate: float, min_val: float = 0.0) -> Callable[[SystemState, int], float]:
-        """Exponential decay with floor."""
+    def decay(variable: str, rate: float, min_val: float = 0.0) -> Callable[[SystemState, int], float]:
+        """
+        Exponential decay with floor.
 
+        Parameters
+        ----------
+        variable : str
+            The variable to update (e.g., "A", "B", "C", etc.)
+        rate : float
+            Decay rate per step (0.1 = 10% decay)
+        min_val : float
+            Minimum value floor (default 0.0)
+        """
         def rule(state: SystemState, step: int) -> float:
             inputs = state.inputs.to_dict()
-            current = inputs.get("A", 1.0)
+            current = inputs.get(variable, 1.0)
             new_val = current * (1.0 - rate)
             return max(min_val, new_val)
 
