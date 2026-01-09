@@ -284,12 +284,17 @@ class UpdateRules:
         return lambda state, step: value
 
     @staticmethod
-    def linear_growth(rate: float, max_val: float = 1.0) -> Callable[[SystemState, int], float]:
+    def linear_growth(
+        rate: float,
+        max_val: float = 1.0,
+        *,
+        variable: str = "A",
+    ) -> Callable[[SystemState, int], float]:
         """Linear growth with optional cap."""
 
         def rule(state: SystemState, step: int) -> float:
             inputs = state.inputs.to_dict()
-            current = inputs.get("A", 0.0)  # default lookup
+            current = inputs.get(variable, 0.0)  # default lookup
             new_val = current + rate
             return min(max_val, max(0.0, new_val))
 
@@ -310,12 +315,17 @@ class UpdateRules:
         return lambda state, step: float(fibonacci(step))
 
     @staticmethod
-    def decay(rate: float, min_val: float = 0.0) -> Callable[[SystemState, int], float]:
+    def decay(
+        rate: float,
+        min_val: float = 0.0,
+        *,
+        variable: str = "A",
+    ) -> Callable[[SystemState, int], float]:
         """Exponential decay with floor."""
 
         def rule(state: SystemState, step: int) -> float:
             inputs = state.inputs.to_dict()
-            current = inputs.get("A", 1.0)
+            current = inputs.get(variable, 1.0)
             new_val = current * (1.0 - rate)
             return max(min_val, new_val)
 

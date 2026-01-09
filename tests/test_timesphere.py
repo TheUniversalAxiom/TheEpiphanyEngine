@@ -78,8 +78,8 @@ def test_decay_simulation():
     sphere = TimeSphere(initial_inputs=inputs)
 
     # Add decay rules
-    sphere.add_update_rule("A", UpdateRules.decay(rate=0.1, min_val=0.1))
-    sphere.add_update_rule("B", UpdateRules.decay(rate=0.1, min_val=0.1))
+    sphere.add_update_rule("A", UpdateRules.decay(rate=0.1, min_val=0.1, variable="A"))
+    sphere.add_update_rule("B", UpdateRules.decay(rate=0.1, min_val=0.1, variable="B"))
 
     result = sphere.simulate(steps=5)
 
@@ -132,6 +132,12 @@ def test_update_rules_collection():
     assert fib_rule(state_dummy, 0) == 0.0
     assert fib_rule(state_dummy, 1) == 1.0
     assert fib_rule(state_dummy, 5) == 5.0
+
+    # Test variable-aware decay and growth
+    decay_rule = UpdateRules.decay(rate=0.1, min_val=0.0, variable="B")
+    growth_rule = UpdateRules.linear_growth(rate=0.2, max_val=1.0, variable="C")
+    assert abs(decay_rule(state_dummy, 0) - (inputs.B * 0.9)) < 0.0001
+    assert abs(growth_rule(state_dummy, 0) - (inputs.C + 0.2)) < 0.0001
 
     print("✓ Pre-built update rules")
 
