@@ -158,7 +158,11 @@ def cached_fibonacci(n: int) -> int:
         return 0
     if n == 1:
         return 1
-    return cached_fibonacci(n - 1) + cached_fibonacci(n - 2)
+
+    prev, current = 0, 1
+    for _ in range(2, n + 1):
+        prev, current = current, prev + current
+    return current
 
 
 @lru_cache(maxsize=64)
