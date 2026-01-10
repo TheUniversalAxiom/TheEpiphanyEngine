@@ -70,6 +70,7 @@ def compute_intelligence(
     validate: bool = True,
     clamp_to_unit: bool = True,
     return_components: bool = False,
+    strict_bounds: bool = False,
 ) -> Union[float, Tuple[float, Dict[str, float]]]:
     """
     Compute the EPIPHANY core axiom:
@@ -83,6 +84,7 @@ def compute_intelligence(
     validate : whether to check numeric types and some simple bounds.
     clamp_to_unit : if True, clamp A/B/C/X/Y to [0,1] and Z/E_n >= 0, F_n >= -1.
     return_components : if True return (score, components_dict).
+    strict_bounds : if True, raise ValueError when values fall outside expected ranges.
 
     Returns
     -------
@@ -94,6 +96,24 @@ def compute_intelligence(
         for k, v in inputs.items():
             if not isinstance(v, (int, float)):
                 raise TypeError(f"{k} must be numeric, got {type(v).__name__}")
+
+    if strict_bounds:
+        bounds = {
+            "A": (0.0, 1.0),
+            "B": (0.0, 1.0),
+            "C": (0.0, 1.0),
+            "X": (0.0, 1.0),
+            "Y": (0.0, 1.0),
+            "Z": (0.0, None),
+            "E_n": (0.0, None),
+            "F_n": (-1.0, None),
+        }
+        for key, (lower, upper) in bounds.items():
+            value = float(inputs[key])
+            if lower is not None and value < lower:
+                raise ValueError(f"{key} must be >= {lower}, got {value}")
+            if upper is not None and value > upper:
+                raise ValueError(f"{key} must be <= {upper}, got {value}")
 
     if clamp_to_unit:
         # clamp A/B/C/X/Y to [0,1]; Z,E_n >= 0; F_n >= -1
