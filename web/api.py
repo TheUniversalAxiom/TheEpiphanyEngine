@@ -423,10 +423,20 @@ def simulate(
             },
         )
 
+        response_steps = [
+            {
+                "step": step["step"],
+                "inputs": step["state"]["inputs"],
+                "intelligence": step["intelligence"],
+                "events": step["events"],
+            }
+            for step in payload["steps"]
+            if step["step"] != 0
+        ]
         response = SimulationResponse(
-            steps=payload["steps"],
+            steps=response_steps,
             summary=payload["summary"],
-            intelligence_history=result.intelligence_history(),
+            intelligence_history=[step["intelligence"]["score"] for step in response_steps],
             selected_preset=selected_preset,
             preset_fallback=preset_fallback,
         )

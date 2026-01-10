@@ -193,8 +193,8 @@ class TestSimulateEndpoint:
 
         assert response.status_code == 200
         data = response.json()
-        # With all zeros except X and Y, intelligence should be 0
-        assert data["intelligence_history"][0] == 0.0
+        # With all zeros except X and Y, initial intelligence should be 0
+        assert data["summary"]["initial_intelligence"] == 0.0
 
     def test_simulate_with_max_steps(self):
         """Test simulation with maximum allowed steps."""
@@ -362,6 +362,7 @@ class TestResponseFormat:
             assert "step" in step
             assert "intelligence" in step
             assert "inputs" in step
+            assert "state" not in step
 
         # Check summary structure
         assert isinstance(data["summary"], dict)
@@ -371,6 +372,30 @@ class TestResponseFormat:
         # Check intelligence history
         assert isinstance(data["intelligence_history"], list)
         assert all(isinstance(x, (int, float)) for x in data["intelligence_history"])
+
+    def test_simulation_step_contract(self):
+        """Test simulation steps count and fields align with contract."""
+        request_data = {
+            "A": 0.6,
+            "B": 0.6,
+            "C": 0.6,
+            "X": 0.6,
+            "Y": 0.6,
+            "Z": 0.6,
+            "E_n": 1.2,
+            "F_n": 1.0,
+            "steps": 2,
+        }
+        response = client.post("/api/simulate", json=request_data)
+
+        assert response.status_code == 200
+        data = response.json()
+
+        assert len(data["steps"]) == 2
+        assert len(data["intelligence_history"]) == 2
+        assert data["steps"][0]["step"] == 1
+        assert "inputs" in data["steps"][0]
+        assert "state" not in data["steps"][0]
 
 
 class TestAPIDocumentation:
