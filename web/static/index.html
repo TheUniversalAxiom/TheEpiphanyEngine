@@ -70,6 +70,31 @@
               <button type="submit">Run simulation</button>
             </div>
           </form>
+          <div class="snapshot" id="instant-snapshot">
+            <div class="snapshot-header">
+              <h3>Instant snapshot</h3>
+              <p class="snapshot-subtitle">Live intelligence score from the current inputs.</p>
+            </div>
+            <div class="snapshot-grid">
+              <div>
+                <p class="snapshot-label">Score</p>
+                <p class="snapshot-value" id="instant-score">--</p>
+              </div>
+              <div>
+                <p class="snapshot-label">ABC</p>
+                <p class="snapshot-value" id="instant-abc">--</p>
+              </div>
+              <div>
+                <p class="snapshot-label">XYZ</p>
+                <p class="snapshot-value" id="instant-xyz">--</p>
+              </div>
+              <div>
+                <p class="snapshot-label">E factor</p>
+                <p class="snapshot-value" id="instant-e-factor">--</p>
+              </div>
+            </div>
+            <p class="snapshot-hint" id="instant-hint">Adjust inputs to see the formula update instantly.</p>
+          </div>
         </div>
 
         <div>

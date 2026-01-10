@@ -17,6 +17,8 @@ def load_test_module(filepath):
 
 def main():
     """Run all test suites."""
+    repo_root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(repo_root))
     print("\n" + "╔" + "=" * 68 + "╗")
     print("║" + " " * 20 + "EPIPHANY ENGINE - TEST SUITE" + " " * 19 + "║")
     print("╚" + "=" * 68 + "╝")
