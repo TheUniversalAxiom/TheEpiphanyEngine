@@ -7,6 +7,7 @@ Provides:
 - thresholds and labels are configurable.
 """
 from typing import Tuple, Dict, Iterable, Optional
+import warnings
 
 Number = float
 
@@ -49,15 +50,23 @@ def x_from_observations(
         Measure of transient affect; higher -> more subjectivity.
     bias_indicator : float
         Measure of detected systemic bias; higher -> more subjectivity.
-    weights : optional dict to weight components, keys: 'noise', 'emotion', 'bias'
+    weights : optional dict to weight components, expected keys: 'noise', 'emotion', 'bias'
     normalize : if True, scale the computed value to [0,1] by simple heuristic.
 
     Returns
     -------
     float in [0,1]
     """
-    if weights is None:
-        weights = {"noise": 0.4, "emotion": 0.35, "bias": 0.25}
+    default_weights = {"noise": 0.4, "emotion": 0.35, "bias": 0.25}
+    provided_weights = weights or {}
+    unknown_keys = set(provided_weights) - set(default_weights)
+    if unknown_keys:
+        warnings.warn(
+            f"Unknown weight keys provided: {sorted(unknown_keys)}",
+            UserWarning,
+            stacklevel=2,
+        )
+    weights = {**default_weights, **provided_weights}
 
     # Basic linear combination; input signals can be any non-negative number.
     score = weights["noise"] * float(noise) + weights["emotion"] * float(emotional_volatility) + weights["bias"] * float(bias_indicator)
