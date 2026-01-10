@@ -86,13 +86,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install pip-audit safety
 
+      # Audit dependencies for known vulnerabilities
+      # Note: --require-hashes not used to allow version ranges in requirements.txt
+      # For production deployments, consider using pip-compile with hash pinning
       - name: Run pip-audit
-        run: pip-audit --require-hashes --disable-pip
+        run: pip-audit -r requirements.txt --desc
         continue-on-error: true
 
       - name: Check dependencies with Safety
         run: |
-          pip install -r requirements.txt
           safety check --json
         continue-on-error: true
 
