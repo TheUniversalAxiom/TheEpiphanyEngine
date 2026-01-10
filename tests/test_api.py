@@ -29,6 +29,10 @@ class TestHealthEndpoints:
         assert data["name"] == "Epiphany Engine API"
         assert "version" in data
         assert "status" in data
+        assert data["status"] == "ok"
+        assert data["docs_url"] == "/api/docs"
+        assert data["health_url"] == "/api/health"
+        assert data["info_url"] == "/api/info"
 
     def test_health_endpoint(self):
         """Test health check endpoint."""
@@ -42,9 +46,15 @@ class TestHealthEndpoints:
         response = client.get("/api/info")
         assert response.status_code == 200
         data = response.json()
+        assert data["name"] == "Epiphany Engine API"
         assert "version" in data
+        assert data["status"] == "ok"
+        assert "description" in data
         assert "endpoints" in data
+        assert data["endpoints"]["simulate"] == "/api/simulate"
         assert "authentication" in data
+        assert "cache" in data
+        assert data["cache"]["enabled"] is True
 
 
 class TestSecurityHeaders:
