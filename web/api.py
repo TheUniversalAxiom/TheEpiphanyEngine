@@ -146,12 +146,14 @@ PRESET_DEFAULT = "baseline"
 
 @app.get("/")
 def root():
-    """Root endpoint - redirect to docs."""
+    """Root endpoint - API overview."""
     return {
-        "message": "Epiphany Engine API",
+        "name": "Epiphany Engine API",
         "version": "0.1.0",
-        "docs": "/api/docs",
-        "health": "/api/health",
+        "status": "ok",
+        "docs_url": "/api/docs",
+        "health_url": "/api/health",
+        "info_url": "/api/info",
     }
 
 
@@ -205,7 +207,16 @@ def get_info():
     return {
         "name": "Epiphany Engine API",
         "version": "0.1.0",
+        "status": "ok",
         "description": "Universal Axiom Organic Intelligence Model",
+        "endpoints": {
+            "docs": "/api/docs",
+            "health": "/api/health",
+            "info": "/api/info",
+            "simulate": "/api/simulate",
+            "cache_stats": "/api/cache/stats",
+            "cache_clear": "/api/cache/clear",
+        },
         "presets": [
             "baseline",
             "basic-growth",
@@ -214,8 +225,10 @@ def get_info():
             "ai-alignment",
         ],
         "default_preset": PRESET_DEFAULT,
-        "cache_enabled": True,
-        "cache_ttl_seconds": 3600,
+        "cache": {
+            "enabled": True,
+            "ttl_seconds": 3600,
+        },
         "rate_limits": {
             "default": "100 requests per hour per IP",
             "simulate": "20 requests per minute per IP",
