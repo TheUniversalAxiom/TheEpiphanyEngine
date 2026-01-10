@@ -171,6 +171,7 @@ def cached_e_sequence(n: int, a: float = 3.0, b: float = 2.0) -> float:
     Cached E_n sequence computation.
 
     Uses LRU cache for frequently accessed E_n values.
+    Uses iterative approach to avoid RecursionError for large n.
 
     Args:
         n: Step number
@@ -182,7 +183,11 @@ def cached_e_sequence(n: int, a: float = 3.0, b: float = 2.0) -> float:
     """
     if n == 0:
         return b
-    return a * cached_e_sequence(n - 1, a, b) + b
+
+    result = b
+    for _ in range(n):
+        result = a * result + b
+    return result
 
 
 def clear_all_caches() -> None:
