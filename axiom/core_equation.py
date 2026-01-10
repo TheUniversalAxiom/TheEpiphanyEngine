@@ -7,6 +7,7 @@ Implements:
 - compute_intelligence(A, B, C, X, Y, Z, E_n, F_n)
 - optional symbolic representation using sympy (if available)
 """
+import math
 from typing import Union, Tuple, Dict, Optional, Iterable
 
 Number = Union[int, float]
@@ -96,6 +97,8 @@ def compute_intelligence(
         for k, v in inputs.items():
             if not isinstance(v, (int, float)):
                 raise TypeError(f"{k} must be numeric, got {type(v).__name__}")
+            if not math.isfinite(float(v)):
+                raise ValueError(f"{k} must be finite, got {v}")
 
     if strict_bounds:
         bounds = {
