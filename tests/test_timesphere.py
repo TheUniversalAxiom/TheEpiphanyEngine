@@ -1,6 +1,7 @@
 """
 Tests for engine/timesphere.py
 """
+import sys
 from engine.timesphere import TimeSphere, UpdateRules
 from engine.state import AxiomInputs
 
