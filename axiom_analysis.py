@@ -6,6 +6,7 @@ the project's current state and identify optimal next steps.
 """
 from axiom.core_equation import compute_intelligence
 
+
 # Assess current project state through axiom lens
 def analyze_project_intelligence():
     """
@@ -41,7 +42,7 @@ def analyze_project_intelligence():
 
     print("=== EPIPHANY Project Intelligence Analysis ===\n")
     print(f"Current Intelligence Score: {score:.4f}")
-    print(f"\nComponent Breakdown:")
+    print("\nComponent Breakdown:")
     print(f"  ABC (Foundation): {components['ABC']:.4f}")
     print(f"    A (Alignment): {components['A']:.2f}")
     b_warning = " ⚠️  BOTTLENECK" if components["B"] < 0.6 else ""
@@ -68,12 +69,12 @@ def analyze_project_intelligence():
     if components["F_n"] < 2.0:
         bottlenecks.append("F_n (Feedback): Add benchmarks and external validation")
 
-    print(f"\n=== Identified Bottlenecks ===")
+    print("\n=== Identified Bottlenecks ===")
     for i, bottleneck in enumerate(bottlenecks, 1):
         print(f"{i}. {bottleneck}")
 
     # Simulate improvement scenarios
-    print(f"\n=== Improvement Scenarios ===")
+    print("\n=== Improvement Scenarios ===")
 
     # Scenario 1: Add visualization tooling + notebooks
     improved_state_1 = current_state.copy()
@@ -97,7 +98,7 @@ def analyze_project_intelligence():
     score_3, _ = compute_intelligence(**improved_state_3, return_components=True)
     print(f"3. Full Platform: {score_2:.4f} → {score_3:.4f} (↑{((score_3/score_2 - 1) * 100):.1f}%)")
 
-    print(f"\n=== Recommended Action Plan ===")
+    print("\n=== Recommended Action Plan ===")
     print("Priority 1: Add visualization tooling + notebooks (↑ Y, F_n)")
     print("Priority 2: Expand integrations and extensibility (↑ B, C)")
     print("Priority 3: Add benchmarks and external validation (↑ F_n, Z)")
@@ -126,19 +127,19 @@ def analyze_project_intelligence():
     print(f"Previous Score: {score:.4f}")
     print(f"Improvement: {new_score - score:.4f} ({((new_score / score - 1) * 100):.1f}% increase)")
 
-    print(f"\nComponent Changes:")
+    print("\nComponent Changes:")
     print(f"  B (Behavior): {current_state['B']:.2f} → {updated_state['B']:.2f}")
     print(f"  C (Capacity): {current_state['C']:.2f} → {updated_state['C']:.2f}")
     print(f"  Y (Yield): {current_state['Y']:.2f} → {updated_state['Y']:.2f}")
     print(f"  Z (Zero-error): {current_state['Z']:.2f} → {updated_state['Z']:.2f}")
     print(f"  F_n (Feedback): {current_state['F_n']:.2f} → {updated_state['F_n']:.2f}")
 
-    print(f"\nNew Component Breakdown:")
+    print("\nNew Component Breakdown:")
     print(f"  ABC (Foundation): {new_components['ABC']:.4f}")
     print(f"  XYZ (Context): {new_components['XYZ']:.4f}")
     print(f"  E_factor (Evolution): {new_components['E_factor']:.2f}")
 
-    print(f"\n✅ Next-phase plan modeled successfully!")
+    print("\n✅ Next-phase plan modeled successfully!")
     print(f"   Project intelligence increased by {((new_score / score - 1) * 100):.0f}%")
 
     return score, current_state, bottlenecks, new_score, updated_state

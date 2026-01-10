@@ -1,22 +1,20 @@
-import logging
 import os
 import time
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
-from fastapi import FastAPI, Request, Depends, HTTPException, status
-from fastapi.staticfiles import StaticFiles
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 from engine.state import AxiomInputs
 from engine.timesphere import TimeSphere, UpdateRules
-from web.auth import verify_api_key, AuthConfig
-from web.logging_config import setup_logging, get_logger, LogContext
+from web.auth import AuthConfig, verify_api_key
+from web.logging_config import LogContext, get_logger, setup_logging
 
 # Setup structured logging
 setup_logging()

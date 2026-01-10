@@ -7,9 +7,9 @@ Models a system experiencing corruption:
 - Behaviors becoming misaligned (B decreases)
 - Eventually leading to intelligence collapse
 """
-from engine.timesphere import TimeSphere, UpdateRules
+from axiom.subjectivity_scale import label_x, x_from_observations
 from engine.state import AxiomInputs
-from axiom.subjectivity_scale import x_from_observations, label_x
+from engine.timesphere import TimeSphere, UpdateRules
 
 
 def run_corruption_scenario():
@@ -89,13 +89,13 @@ def run_corruption_scenario():
 
     # Display results
     print(f"\nSimulation completed: {result.summary['total_steps']} steps")
-    print(f"\nIntelligence Decay:")
+    print("\nIntelligence Decay:")
     print(f"  Initial: {result.summary['initial_intelligence']:.4f}")
     print(f"  Final:   {result.summary['final_intelligence']:.4f}")
     print(f"  Decline: {result.summary['growth_rate']:.1%}")
     print(f"  Lowest:  {result.summary['min_intelligence']:.4f}")
 
-    print(f"\nStep-by-Step Corruption:")
+    print("\nStep-by-Step Corruption:")
     print(
         f"{'Step':>4} | {'I_n':>10} | {'A':>5} | {'X':>5} | {'ABC':>6} | {'XYZ':>6} | "
         f"{'Subj.':>15} | Events"
@@ -115,7 +115,7 @@ def run_corruption_scenario():
 
     # Analyze trends
     trends = sphere.analyze_trends()
-    print(f"\nTrend Analysis:")
+    print("\nTrend Analysis:")
     print(f"  Overall trend: {trends['trend']}")
     print(f"  Total events: {trends['total_events']}")
     print(f"  Volatility: {trends['score_volatility']:.4f}")
@@ -125,7 +125,7 @@ def run_corruption_scenario():
     final_x = result.steps[-1].intelligence.components["X"]
     subjectivity_increase = final_x - initial_x
 
-    print(f"\nCorruption Metrics:")
+    print("\nCorruption Metrics:")
     print(f"  Subjectivity increase: {initial_x:.3f} → {final_x:.3f} (Δ{subjectivity_increase:+.3f})")
     print(f"  Initial label: {label_x(initial_x)}")
     print(f"  Final label: {label_x(final_x)}")

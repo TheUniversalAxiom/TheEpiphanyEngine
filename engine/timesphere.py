@@ -7,10 +7,11 @@ Allows systems to evolve over discrete time steps while tracking:
 - State transitions and decision points
 - Corruption vs coherence trends
 """
-from typing import List, Dict, Any, Optional, Callable
 from dataclasses import dataclass, field
+from typing import Any, Callable, Dict, List, Optional
+
 from axiom.core_equation import compute_intelligence, e_recurrence, fibonacci
-from engine.state import SystemState, AxiomInputs, IntelligenceSnapshot
+from engine.state import AxiomInputs, IntelligenceSnapshot, SystemState
 
 
 @dataclass

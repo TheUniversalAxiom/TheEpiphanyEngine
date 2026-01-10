@@ -2,12 +2,13 @@
 Performance benchmarking utilities for the axiom engine.
 """
 
-import time
 import statistics
-from typing import Dict, List, Callable, Any, Tuple
+import time
+from typing import Any, Dict
+
 from axiom.core_equation import compute_intelligence, fibonacci_sequence
-from engine.timesphere import TimeSphere, UpdateRules
 from engine.state import AxiomInputs
+from engine.timesphere import TimeSphere, UpdateRules
 
 
 def benchmark_computation(

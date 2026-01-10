@@ -6,8 +6,8 @@ Provides:
 - label_x(x)
 - thresholds and labels are configurable.
 """
-from typing import Tuple, Dict, Iterable, Optional
 import warnings
+from typing import Dict, Iterable, Optional, Tuple
 
 Number = float
 

@@ -7,8 +7,8 @@ Models a team iterating through experimentation cycles:
 - Objectivity stabilizes after noisy exploration (X)
 - Energy and feedback loops accelerate iteration
 """
-from engine.timesphere import TimeSphere, UpdateRules
 from engine.state import AxiomInputs
+from engine.timesphere import TimeSphere, UpdateRules
 
 
 def run_innovation_cycles_scenario():
@@ -57,13 +57,13 @@ def run_innovation_cycles_scenario():
     result = sphere.simulate(steps=12)
 
     print(f"\nSimulation completed: {result.summary['total_steps']} steps")
-    print(f"\nInnovation Trajectory:")
+    print("\nInnovation Trajectory:")
     print(f"  Initial: {result.summary['initial_intelligence']:.4f}")
     print(f"  Final:   {result.summary['final_intelligence']:.4f}")
     print(f"  Growth:  {result.summary['growth_rate']:.1%}")
     print(f"  Peak:    {result.summary['max_intelligence']:.4f}")
 
-    print(f"\nCycle View:")
+    print("\nCycle View:")
     print(
         f"{'Step':>4} | {'I_n':>10} | {'A':>5} | {'X':>5} | {'Y':>5} | {'Z':>5} | {'F_n':>6} | Events"
     )
@@ -79,7 +79,7 @@ def run_innovation_cycles_scenario():
         )
 
     trends = sphere.analyze_trends()
-    print(f"\nTrend Analysis:")
+    print("\nTrend Analysis:")
     print(f"  Overall trend: {trends['trend']}")
     print(f"  Total events: {trends['total_events']}")
     print(f"  Volatility: {trends['score_volatility']:.4f}")

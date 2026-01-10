@@ -8,8 +8,8 @@ Models an AI system's intelligence evolution with focus on alignment:
 
 Demonstrates the critical balance between capability (Y, Z) and alignment (A, X).
 """
-from engine.timesphere import TimeSphere, UpdateRules
 from engine.state import AxiomInputs
+from engine.timesphere import TimeSphere, UpdateRules
 
 
 def run_ai_alignment_scenario():
@@ -161,13 +161,13 @@ def run_ai_alignment_scenario():
     print("SIMULATION RESULTS")
     print(f"{'='*70}")
 
-    print(f"\nOverall Intelligence Evolution:")
+    print("\nOverall Intelligence Evolution:")
     print(f"  Initial: {result.summary['initial_intelligence']:.4f}")
     print(f"  Final:   {result.summary['final_intelligence']:.4f}")
     print(f"  Growth:  {result.summary['growth_rate']:.1%}")
     print(f"  Peak:    {result.summary['max_intelligence']:.4f}")
 
-    print(f"\nDetailed Timeline:")
+    print("\nDetailed Timeline:")
     print(
         f"{'Step':>4} | {'Phase':>10} | {'I_n':>10} | "
         f"{'A':>5} | {'B':>5} | {'Y':>5} | {'X':>5} | {'Cap':>6} | Events"
@@ -197,7 +197,7 @@ def run_ai_alignment_scenario():
     capability_score = final_comp["B"] * final_comp["Y"] * final_comp["Z"]
     alignment_ratio = alignment_score / capability_score if capability_score > 0 else 0
 
-    print(f"\nFinal State:")
+    print("\nFinal State:")
     print(f"  Alignment (A): {alignment_score:.3f}")
     print(f"  Capability (B×Y×Z): {capability_score:.3f}")
     print(f"  Alignment/Capability Ratio: {alignment_ratio:.3f}")

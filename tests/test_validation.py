@@ -3,10 +3,11 @@ Comprehensive validation and edge case tests for The EPIPHANY Engine.
 """
 
 import pytest
+
 from axiom.core_equation import compute_intelligence, e_recurrence, fibonacci, fibonacci_sequence
 from axiom.subjectivity_scale import determine_subjectivity
-from engine.timesphere import TimeSphere, UpdateRules
 from engine.state import AxiomInputs
+from engine.timesphere import TimeSphere, UpdateRules
 
 
 class TestInputValidation:

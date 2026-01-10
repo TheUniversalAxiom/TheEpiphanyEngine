@@ -8,7 +8,7 @@ Implements:
 - optional symbolic representation using sympy (if available)
 """
 import math
-from typing import Union, Tuple, Dict, Optional, Iterable
+from typing import Dict, Iterable, Tuple, Union
 
 Number = Union[int, float]
 

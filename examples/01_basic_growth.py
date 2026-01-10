@@ -7,8 +7,8 @@ Models a learner developing intelligence over time through:
 - Increasing capability and output (Y, Z growth)
 - Energy and feedback growing over time
 """
-from engine.timesphere import TimeSphere, UpdateRules
 from engine.state import AxiomInputs
+from engine.timesphere import TimeSphere, UpdateRules
 
 
 def run_basic_growth_scenario():
@@ -74,13 +74,13 @@ def run_basic_growth_scenario():
 
     # Display results
     print(f"\nSimulation completed: {result.summary['total_steps']} steps")
-    print(f"\nIntelligence Growth:")
+    print("\nIntelligence Growth:")
     print(f"  Initial: {result.summary['initial_intelligence']:.4f}")
     print(f"  Final:   {result.summary['final_intelligence']:.4f}")
     print(f"  Growth:  {result.summary['growth_rate']:.1%}")
     print(f"  Peak:    {result.summary['max_intelligence']:.4f}")
 
-    print(f"\nStep-by-Step Evolution:")
+    print("\nStep-by-Step Evolution:")
     print(f"{'Step':>4} | {'I_n':>10} | {'ABC':>6} | {'XYZ':>6} | {'E_n':>6} | {'F_n':>6} | Events")
     print("-" * 80)
 
@@ -95,7 +95,7 @@ def run_basic_growth_scenario():
 
     # Analyze trends
     trends = sphere.analyze_trends()
-    print(f"\nTrend Analysis:")
+    print("\nTrend Analysis:")
     print(f"  Overall trend: {trends['trend']}")
     print(f"  Total events: {trends['total_events']}")
     print(f"  Volatility: {trends['score_volatility']:.4f}")

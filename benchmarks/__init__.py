@@ -6,7 +6,7 @@ from .performance import (
     benchmark_computation,
     benchmark_simulation,
     benchmark_update_rules,
-    run_all_benchmarks
+    run_all_benchmarks,
 )
 
 __all__ = [

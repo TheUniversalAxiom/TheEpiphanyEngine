@@ -1,10 +1,9 @@
 """
 Master test runner for EPIPHANY Engine.
 """
+import importlib.util
 import sys
 from pathlib import Path
-
-import importlib.util
 
 
 def load_test_module(filepath):

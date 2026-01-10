@@ -3,16 +3,16 @@ Plotting utilities for visualizing axiom computations and simulation results.
 """
 
 try:
-    import matplotlib.pyplot as plt
     import matplotlib.gridspec as gridspec
-    from matplotlib.patches import Rectangle
+    import matplotlib.pyplot as plt
     import numpy as np
+    from matplotlib.patches import Rectangle
     HAS_MATPLOTLIB = True
 except ImportError:
     HAS_MATPLOTLIB = False
 
-from typing import List, Dict, Any, Optional, Tuple
-from engine.state import TimeStep
+from typing import Dict, List, Optional, Tuple
+
 from engine.timesphere import SimulationResult
 
 

@@ -2,13 +2,12 @@
 Export utilities for simulation results and analyses.
 """
 
-import json
 import csv
-from typing import Dict, List, Any, Optional
-from pathlib import Path
+import json
 from datetime import datetime
+from typing import Dict, Optional
+
 from engine.timesphere import SimulationResult
-from engine.state import TimeStep
 
 
 def export_to_json(

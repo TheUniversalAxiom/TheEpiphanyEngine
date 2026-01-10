@@ -8,14 +8,9 @@ This module provides infrastructure for extending the engine with:
 - Integration adapters
 """
 
-from .base import (
-    BaseExtension,
-    UpdateRuleExtension,
-    EventHandlerExtension,
-    IntegrationExtension
-)
-from .registry import ExtensionRegistry, get_registry
+from .base import BaseExtension, EventHandlerExtension, IntegrationExtension, UpdateRuleExtension
 from .loader import load_extension, load_extensions_from_directory
+from .registry import ExtensionRegistry, get_registry
 
 __all__ = [
     'BaseExtension',

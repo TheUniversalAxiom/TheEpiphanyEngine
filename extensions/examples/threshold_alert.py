@@ -6,11 +6,9 @@ alerts when intelligence or component values cross thresholds.
 """
 
 import logging
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 from extensions.base import EventHandlerExtension
-from engine.state import SystemState
-
 
 logger = logging.getLogger(__name__)
 
@@ -127,8 +125,8 @@ class ThresholdAlertHandler(EventHandlerExtension):
 
 # Example usage
 if __name__ == "__main__":
-    from engine.timesphere import TimeSphere
     from engine.state import AxiomInputs
+    from engine.timesphere import TimeSphere
 
     # Create simulation
     inputs = AxiomInputs(A=0.3, B=0.4, C=0.5, X=0.6, Y=0.7, Z=0.8, E_n=1.0, F_n=1.0)

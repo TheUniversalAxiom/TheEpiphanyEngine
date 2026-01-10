@@ -7,6 +7,7 @@ import importlib.util
 import sys
 from pathlib import Path
 from typing import List, Optional
+
 from .base import BaseExtension
 from .registry import get_registry
 

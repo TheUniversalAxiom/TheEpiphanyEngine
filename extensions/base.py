@@ -3,8 +3,7 @@ Base classes for EPIPHANY Engine extensions.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Callable, Optional
-from engine.state import AxiomInputs
+from typing import Any, Callable, Dict
 
 
 class BaseExtension(ABC):
