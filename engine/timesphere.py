@@ -71,6 +71,7 @@ class TimeSphere:
     def __init__(
         self,
         initial_inputs: AxiomInputs,
+        update_rules: Optional[Dict[str, Callable[[SystemState, int], float]]] = None,
         metadata: Optional[Dict[str, Any]] = None,
     ):
         """
@@ -80,11 +81,16 @@ class TimeSphere:
         ----------
         initial_inputs : AxiomInputs
             Starting values for A, B, C, X, Y, Z, E_n, F_n
+        update_rules : optional dict
+            Optional mapping of variable names to update rules
         metadata : optional dict
             Additional metadata about the system
         """
         self.initial_state = SystemState(step=0, inputs=initial_inputs, metadata=metadata or {})
         self.update_rules: Dict[str, Callable[[SystemState, int], float]] = {}
+        if update_rules:
+            for variable, rule in update_rules.items():
+                self.add_update_rule(variable, rule)
         self.event_handlers: List[Callable[[SystemState, int], Optional[str]]] = []
         self.history: List[TimeStep] = []
 
