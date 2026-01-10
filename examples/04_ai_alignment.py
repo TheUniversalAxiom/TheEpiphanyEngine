@@ -126,9 +126,8 @@ def run_ai_alignment_scenario():
     sphere.add_update_rule("F_n", feedback_rule)
 
     # Event detection for alignment issues
-    def detect_alignment_events(state, step):
+    def alignment_event_message(state, step):
         phase = phase_aware_update(state, step)
-        events = []
 
         # Phase transitions
         if step == 6:
@@ -151,7 +150,10 @@ def run_ai_alignment_scenario():
 
         return None
 
-    sphere.add_event_handler(detect_alignment_events)
+    sphere.add_event_handler(
+        lambda state, step: alignment_event_message(state, step) is not None,
+        alignment_event_message,
+    )
 
     # Run simulation
     result = sphere.simulate(steps=15)

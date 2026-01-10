@@ -356,16 +356,15 @@ class TestTimeSphereEdgeCases:
             X=0.7, Y=0.7, Z=0.7,
             E_n=3.0, F_n=2.0
         )
-        rules = {"A": UpdateRules.linear_growth(rate=0.1, max_value=1.0)}
-
         triggered = []
 
-        def milestone_handler(step):
-            triggered.append(step.step)
+        def milestone_handler(state, step):
+            triggered.append(step)
 
-        sphere = TimeSphere(initial, rules)
+        sphere = TimeSphere(initial_inputs=initial)
+        sphere.add_update_rule("A", UpdateRules.linear_growth(rate=0.1, max_val=1.0, variable="A"))
         sphere.add_event_handler(
-            lambda s: s.inputs.A > 0.5,
+            lambda s, step: s.inputs.A > 0.5,
             milestone_handler,
             event_type="test_milestone"
         )

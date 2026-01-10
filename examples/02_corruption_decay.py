@@ -69,7 +69,7 @@ def run_corruption_scenario():
     sphere.add_update_rule("F_n", lambda s, step: max(0.0, s.inputs.F_n - 0.3))
 
     # Add corruption event detection
-    def detect_corruption_events(state, step):
+    def corruption_event_message(state, step):
         x_val = state.inputs.X
         x_label = label_x(x_val)
 
@@ -82,7 +82,10 @@ def run_corruption_scenario():
 
         return None
 
-    sphere.add_event_handler(detect_corruption_events)
+    sphere.add_event_handler(
+        lambda state, step: corruption_event_message(state, step) is not None,
+        corruption_event_message,
+    )
 
     # Run simulation
     result = sphere.simulate(steps=12)

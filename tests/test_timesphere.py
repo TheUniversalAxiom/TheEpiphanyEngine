@@ -93,12 +93,15 @@ def test_event_detection():
     sphere = TimeSphere(initial_inputs=inputs)
 
     # Add event handler
-    def detect_event(state, step):
+    def event_message(state, step):
         if step == 3:
             return "Test event at step 3"
         return None
 
-    sphere.add_event_handler(detect_event)
+    sphere.add_event_handler(
+        lambda state, step: event_message(state, step) is not None,
+        event_message,
+    )
 
     result = sphere.simulate(steps=5)
 

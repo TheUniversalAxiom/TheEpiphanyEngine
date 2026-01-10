@@ -45,14 +45,17 @@ def run_innovation_cycles_scenario():
     sphere.add_update_rule("E_n", UpdateRules.e_sequence_rule(a=1.15, b=0.4))
     sphere.add_update_rule("F_n", UpdateRules.fibonacci_rule())
 
-    def detect_innovation_events(state, step):
+    def innovation_event_message(state, step):
         if state.inputs.Y > 0.8 and state.inputs.X > 0.7:
             return "🚀 Breakthrough: High yield with clarity"
         if state.inputs.Y < 0.4 and step > 0:
             return "🧪 Experimentation dip: Learning from failures"
         return None
 
-    sphere.add_event_handler(detect_innovation_events)
+    sphere.add_event_handler(
+        lambda state, step: innovation_event_message(state, step) is not None,
+        innovation_event_message,
+    )
 
     result = sphere.simulate(steps=12)
 

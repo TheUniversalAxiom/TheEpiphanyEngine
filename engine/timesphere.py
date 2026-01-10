@@ -57,6 +57,14 @@ class SimulationResult:
         }
 
 
+@dataclass(frozen=True)
+class EventHandler:
+    """Configured event handler for a predicate-based trigger."""
+    predicate: Callable[[SystemState, int], bool]
+    handler: Callable[[SystemState, int], Optional[str]]
+    event_type: Optional[str] = None
+
+
 class TimeSphere:
     """
     Simulation engine for evolving EPIPHANY systems over time.
@@ -85,7 +93,7 @@ class TimeSphere:
         """
         self.initial_state = SystemState(step=0, inputs=initial_inputs, metadata=metadata or {})
         self.update_rules: Dict[str, Callable[[SystemState, int], float]] = {}
-        self.event_handlers: List[Callable[[SystemState, int], Optional[str]]] = []
+        self.event_handlers: List[EventHandler] = []
         self.history: List[TimeStep] = []
 
     def add_update_rule(self, variable: str, rule: Callable[[SystemState, int], float]):
@@ -104,16 +112,25 @@ class TimeSphere:
             raise ValueError(f"Variable must be one of {valid_vars}")
         self.update_rules[variable] = rule
 
-    def add_event_handler(self, handler: Callable[[SystemState, int], Optional[str]]):
+    def add_event_handler(
+        self,
+        predicate: Callable[[SystemState, int], bool],
+        handler: Callable[[SystemState, int], Optional[str]],
+        event_type: Optional[str] = None,
+    ):
         """
         Add an event detection handler.
 
         Parameters
         ----------
+        predicate : callable
+            Function taking (state, step) -> bool indicating when to fire handler
         handler : callable
             Function taking (state, step) -> optional event description string
+        event_type : optional str
+            Event identifier used when handler returns no description
         """
-        self.event_handlers.append(handler)
+        self.event_handlers.append(EventHandler(predicate=predicate, handler=handler, event_type=event_type))
 
     def step(self, current_state: SystemState, step_num: int) -> TimeStep:
         """
@@ -156,10 +173,14 @@ class TimeSphere:
 
         # Check for events
         events = []
-        for handler in self.event_handlers:
-            event = handler(new_state, step_num)
+        for event_handler in self.event_handlers:
+            if not event_handler.predicate(new_state, step_num):
+                continue
+            event = event_handler.handler(new_state, step_num)
             if event:
                 events.append(event)
+            elif event_handler.event_type:
+                events.append(event_handler.event_type)
 
         return TimeStep(
             step=step_num,

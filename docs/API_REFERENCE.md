@@ -248,23 +248,25 @@ sphere = TimeSphere(initial, rules)
 result = sphere.simulate(steps=20)
 ```
 
-##### `add_event_handler(condition, handler, event_type)`
+##### `add_event_handler(predicate, handler, event_type=None)`
 
 Register event handler.
 
 **Parameters:**
-- `condition` (Callable): Function that takes TimeStep and returns bool
-- `handler` (Callable): Handler function that takes TimeStep
-- `event_type` (str): Event identifier
+- `predicate` (Callable): Function that takes `(SystemState, step)` and returns bool
+- `handler` (Callable): Handler function that takes `(SystemState, step)` and returns optional event text
+- `event_type` (str, optional): Event identifier used when handler returns no description
 
 **Example:**
 ```python
-def milestone_reached(step):
-    print(f"Milestone at step {step.step}!")
+def milestone_message(state, step):
+    if step == 3:
+        return f"Milestone reached at step {step}!"
+    return None
 
 sphere.add_event_handler(
-    lambda s: s.inputs.A > 0.8,
-    milestone_reached,
+    lambda s, step: milestone_message(s, step) is not None,
+    milestone_message,
     "alignment_milestone"
 )
 ```

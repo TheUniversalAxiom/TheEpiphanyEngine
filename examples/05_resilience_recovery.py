@@ -78,7 +78,7 @@ def run_resilience_recovery_scenario():
     sphere.add_update_rule("E_n", energy_rule)
     sphere.add_update_rule("F_n", lambda s, step: s.inputs.F_n + 0.4)
 
-    def detect_recovery_events(state, step):
+    def recovery_event_message(state, step):
         if step == shock_step:
             return "💥 Shock event: External disruption"
         if step > shock_step and state.inputs.A * state.inputs.B * state.inputs.C > 0.5:
@@ -87,7 +87,10 @@ def run_resilience_recovery_scenario():
             return "🌱 Recovery milestone: High yield regained"
         return None
 
-    sphere.add_event_handler(detect_recovery_events)
+    sphere.add_event_handler(
+        lambda state, step: recovery_event_message(state, step) is not None,
+        recovery_event_message,
+    )
 
     result = sphere.simulate(steps=10)
 

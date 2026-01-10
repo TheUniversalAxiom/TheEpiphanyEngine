@@ -56,7 +56,7 @@ def run_basic_growth_scenario():
     sphere.add_update_rule("F_n", lambda s, step: float(step))
 
     # Add event detection
-    def detect_milestones(state, step):
+    def milestone_message(state, step):
         score_estimate = state.inputs.A * state.inputs.B * state.inputs.C
         if score_estimate > 0.5 and step > 0:
             prev_estimate = 0.5  # simplified check
@@ -67,7 +67,10 @@ def run_basic_growth_scenario():
                 return "🚀 Milestone: High yield achieved (Y > 0.8)"
         return None
 
-    sphere.add_event_handler(detect_milestones)
+    sphere.add_event_handler(
+        lambda state, step: milestone_message(state, step) is not None,
+        milestone_message,
+    )
 
     # Run simulation
     result = sphere.simulate(steps=10)
