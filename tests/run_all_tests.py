@@ -26,6 +26,7 @@ def main():
     test_dir = Path(__file__).parent
     test_files = [
         "test_core_equation.py",
+        "test_examples.py",
         "test_timesphere.py",
     ]
 
