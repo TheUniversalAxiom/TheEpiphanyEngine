@@ -47,8 +47,8 @@ def plot_intelligence_trajectory(
     """
     _check_matplotlib()
 
-    steps = [h.step for h in result.steps]
-    intelligence = [h.intelligence.score for h in result.steps]
+    steps = [int(h.step) for h in result.steps]
+    intelligence = [float(h.intelligence.score) for h in result.steps]
 
     fig, ax = plt.subplots(figsize=figsize)
 
@@ -118,7 +118,7 @@ def plot_component_evolution(
     if components is None:
         components = ['A', 'B', 'C', 'X', 'Y', 'Z', 'E_n', 'F_n']
 
-    steps = [h.step for h in result.steps]
+    steps = [int(h.step) for h in result.steps]
 
     # Create subplots
     n_components = len(components)
@@ -133,7 +133,7 @@ def plot_component_evolution(
     colors = plt.cm.tab10(np.linspace(0, 1, len(components)))
 
     for idx, component in enumerate(components):
-        values = [getattr(h.state.inputs, component) for h in result.steps]
+        values = [float(getattr(h.state.inputs, component)) for h in result.steps]
 
         ax = axes[idx]
         ax.plot(steps, values, linewidth=2, color=colors[idx],
@@ -275,8 +275,8 @@ def plot_scenario_comparison(
     colors = plt.cm.tab10(np.linspace(0, 1, len(results)))
 
     for idx, (name, result) in enumerate(results.items()):
-        steps = [h.step for h in result.steps]
-        intelligence = [h.intelligence.score for h in result.steps]
+        steps = [int(h.step) for h in result.steps]
+        intelligence = [float(h.intelligence.score) for h in result.steps]
 
         ax.plot(steps, intelligence, linewidth=2.5, marker='o',
                 markersize=4, label=name, color=colors[idx])
@@ -408,8 +408,8 @@ def create_dashboard(
     """
     _check_matplotlib()
 
-    steps = [h.step for h in result.steps]
-    intelligence = [h.intelligence.score for h in result.steps]
+    steps = [int(h.step) for h in result.steps]
+    intelligence = [float(h.intelligence.score) for h in result.steps]
 
     fig = plt.figure(figsize=figsize)
     gs = gridspec.GridSpec(3, 3, hspace=0.35, wspace=0.3)
@@ -426,9 +426,9 @@ def create_dashboard(
 
     # ABC components
     ax2 = fig.add_subplot(gs[1, 0])
-    a_vals = [h.state.inputs.A for h in result.steps]
-    b_vals = [h.state.inputs.B for h in result.steps]
-    c_vals = [h.state.inputs.C for h in result.steps]
+    a_vals = [float(h.state.inputs.A) for h in result.steps]
+    b_vals = [float(h.state.inputs.B) for h in result.steps]
+    c_vals = [float(h.state.inputs.C) for h in result.steps]
     ax2.plot(steps, a_vals, label='A', linewidth=2)
     ax2.plot(steps, b_vals, label='B', linewidth=2)
     ax2.plot(steps, c_vals, label='C', linewidth=2)
@@ -440,9 +440,9 @@ def create_dashboard(
 
     # XYZ components
     ax3 = fig.add_subplot(gs[1, 1])
-    x_vals = [h.state.inputs.X for h in result.steps]
-    y_vals = [h.state.inputs.Y for h in result.steps]
-    z_vals = [h.state.inputs.Z for h in result.steps]
+    x_vals = [float(h.state.inputs.X) for h in result.steps]
+    y_vals = [float(h.state.inputs.Y) for h in result.steps]
+    z_vals = [float(h.state.inputs.Z) for h in result.steps]
     ax3.plot(steps, x_vals, label='X', linewidth=2)
     ax3.plot(steps, y_vals, label='Y', linewidth=2)
     ax3.plot(steps, z_vals, label='Z', linewidth=2)
@@ -454,8 +454,8 @@ def create_dashboard(
 
     # E_n and F_n
     ax4 = fig.add_subplot(gs[1, 2])
-    e_vals = [h.state.inputs.E_n for h in result.steps]
-    f_vals = [h.state.inputs.F_n for h in result.steps]
+    e_vals = [float(h.state.inputs.E_n) for h in result.steps]
+    f_vals = [float(h.state.inputs.F_n) for h in result.steps]
     ax4_twin = ax4.twinx()
     ax4.plot(steps, e_vals, label='E_n', linewidth=2, color='blue')
     ax4_twin.plot(steps, f_vals, label='F_n', linewidth=2, color='orange')
