@@ -25,11 +25,15 @@ basic_growth = load_module_from_file(example_dir / "01_basic_growth.py", "basic_
 corruption = load_module_from_file(example_dir / "02_corruption_decay.py", "corruption")
 divergent = load_module_from_file(example_dir / "03_divergent_paths.py", "divergent")
 ai_alignment = load_module_from_file(example_dir / "04_ai_alignment.py", "ai_alignment")
+resilience = load_module_from_file(example_dir / "05_resilience_recovery.py", "resilience")
+innovation = load_module_from_file(example_dir / "06_innovation_cycles.py", "innovation")
 
 run_basic_growth_scenario = basic_growth.run_basic_growth_scenario
 run_corruption_scenario = corruption.run_corruption_scenario
 run_divergent_paths_scenario = divergent.run_divergent_paths_scenario
 run_ai_alignment_scenario = ai_alignment.run_ai_alignment_scenario
+run_resilience_recovery_scenario = resilience.run_resilience_recovery_scenario
+run_innovation_cycles_scenario = innovation.run_innovation_cycles_scenario
 
 
 def main():
@@ -44,6 +48,8 @@ def main():
         ("Corruption & Decay", run_corruption_scenario),
         ("Divergent Paths", run_divergent_paths_scenario),
         ("AI Alignment", run_ai_alignment_scenario),
+        ("Resilience & Recovery", run_resilience_recovery_scenario),
+        ("Innovation Cycles", run_innovation_cycles_scenario),
     ]
 
     results = {}
