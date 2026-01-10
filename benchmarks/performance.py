@@ -140,7 +140,7 @@ def benchmark_update_rules(
         "decay": {"A": UpdateRules.decay(rate=0.01, min_value=0.1)},
         "oscillate": {"A": UpdateRules.oscillate(amplitude=0.2, period=10, baseline=0.5)},
         "e_sequence": {"E_n": UpdateRules.e_sequence_rule(a=1.05, b=0.1)},
-        "fibonacci": {"F_n": UpdateRules.fibonacci_rule(scale=0.1)}
+        "fibonacci": {"F_n": UpdateRules.fibonacci_rule()}
     }
 
     results = {}
