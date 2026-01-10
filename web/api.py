@@ -203,20 +203,68 @@ def get_info():
     Get API information and available presets.
 
     Returns configuration details and preset options.
+
+    Endpoints entries include:
+    - name: stable identifier for the route.
+    - method: HTTP method to call.
+    - path: URL path for the route.
+    - description: short summary of the route purpose.
     """
     return {
         "name": "Epiphany Engine API",
         "version": "0.1.0",
         "status": "ok",
         "description": "Universal Axiom Organic Intelligence Model",
-        "endpoints": {
-            "docs": "/api/docs",
-            "health": "/api/health",
-            "info": "/api/info",
-            "simulate": "/api/simulate",
-            "cache_stats": "/api/cache/stats",
-            "cache_clear": "/api/cache/clear",
-        },
+        "endpoints": [
+            {
+                "name": "root",
+                "method": "GET",
+                "path": "/",
+                "description": "API overview and key links.",
+            },
+            {
+                "name": "docs",
+                "method": "GET",
+                "path": "/api/docs",
+                "description": "Interactive API documentation (Swagger UI).",
+            },
+            {
+                "name": "redoc",
+                "method": "GET",
+                "path": "/api/redoc",
+                "description": "Alternative API documentation (ReDoc).",
+            },
+            {
+                "name": "health",
+                "method": "GET",
+                "path": "/api/health",
+                "description": "Health check and basic configuration status.",
+            },
+            {
+                "name": "info",
+                "method": "GET",
+                "path": "/api/info",
+                "description": "API metadata, presets, and configuration details.",
+            },
+            {
+                "name": "simulate",
+                "method": "POST",
+                "path": "/api/simulate",
+                "description": "Run an intelligence simulation with inputs.",
+            },
+            {
+                "name": "cache_stats",
+                "method": "GET",
+                "path": "/api/cache/stats",
+                "description": "Cache usage statistics for monitoring.",
+            },
+            {
+                "name": "cache_clear",
+                "method": "POST",
+                "path": "/api/cache/clear",
+                "description": "Clear all caches (requires authentication).",
+            },
+        ],
         "presets": [
             "baseline",
             "basic-growth",
