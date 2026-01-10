@@ -1,12 +1,28 @@
+import logging
+import time
 from pathlib import Path
 from typing import List, Dict, Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from engine.state import AxiomInputs
 from engine.timesphere import TimeSphere, UpdateRules
+from web.auth import verify_api_key, AuthConfig
+from web.logging_config import setup_logging, get_logger, LogContext
+
+# Setup structured logging
+setup_logging()
+logger = get_logger(__name__)
+
+# Initialize rate limiter
+limiter = Limiter(key_func=get_remote_address, default_limits=["100/hour"])
 
 
 class SimulationRequest(BaseModel):
@@ -30,9 +46,138 @@ class SimulationResponse(BaseModel):
     preset_fallback: bool
 
 
-app = FastAPI(title="Epiphany Engine API")
+app = FastAPI(
+    title="Epiphany Engine API",
+    version="0.1.0",
+    description="Universal Axiom Organic Intelligence Model - REST API",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+)
+
+# Add rate limiter to app state
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure appropriately for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# Request logging middleware
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    """Log all HTTP requests with timing information."""
+    request_id = str(time.time())
+    start_time = time.time()
+
+    with LogContext(request_id=request_id):
+        logger.info(
+            f"Request started: {request.method} {request.url.path}",
+            extra={
+                "extra_fields": {
+                    "method": request.method,
+                    "path": request.url.path,
+                    "client": request.client.host if request.client else None,
+                }
+            },
+        )
+
+        try:
+            response = await call_next(request)
+            duration = time.time() - start_time
+
+            logger.info(
+                f"Request completed: {request.method} {request.url.path}",
+                extra={
+                    "extra_fields": {
+                        "method": request.method,
+                        "path": request.url.path,
+                        "status_code": response.status_code,
+                        "duration_ms": round(duration * 1000, 2),
+                    }
+                },
+            )
+
+            return response
+
+        except Exception as e:
+            duration = time.time() - start_time
+            logger.error(
+                f"Request failed: {request.method} {request.url.path}",
+                extra={
+                    "extra_fields": {
+                        "method": request.method,
+                        "path": request.url.path,
+                        "duration_ms": round(duration * 1000, 2),
+                        "error": str(e),
+                    }
+                },
+                exc_info=True,
+            )
+            raise
 
 PRESET_DEFAULT = "baseline"
+
+
+@app.get("/")
+def root():
+    """Root endpoint - redirect to docs."""
+    return {
+        "message": "Epiphany Engine API",
+        "version": "0.1.0",
+        "docs": "/api/docs",
+        "health": "/api/health",
+    }
+
+
+@app.get("/api/health")
+def health_check():
+    """
+    Health check endpoint for monitoring.
+
+    Returns API status and configuration info.
+    """
+    return {
+        "status": "healthy",
+        "service": "epiphany-engine",
+        "version": "0.1.0",
+        "auth_enabled": AuthConfig.is_enabled(),
+    }
+
+
+@app.get("/api/info")
+def get_info():
+    """
+    Get API information and available presets.
+
+    Returns configuration details and preset options.
+    """
+    return {
+        "name": "Epiphany Engine API",
+        "version": "0.1.0",
+        "description": "Universal Axiom Organic Intelligence Model",
+        "presets": [
+            "baseline",
+            "basic-growth",
+            "corruption-decay",
+            "divergent-paths",
+            "ai-alignment",
+        ],
+        "default_preset": PRESET_DEFAULT,
+        "rate_limits": {
+            "default": "100 requests per hour per IP",
+            "simulate": "20 requests per minute per IP",
+        },
+        "authentication": {
+            "enabled": AuthConfig.is_enabled(),
+            "method": "API Key (X-API-Key header)" if AuthConfig.is_enabled() else "None",
+        },
+    }
 
 
 def apply_preset_rules(
@@ -91,32 +236,86 @@ def apply_preset_rules(
 
 
 @app.post("/api/simulate", response_model=SimulationResponse)
-def simulate(request: SimulationRequest) -> SimulationResponse:
-    inputs = AxiomInputs(
-        A=request.A,
-        B=request.B,
-        C=request.C,
-        X=request.X,
-        Y=request.Y,
-        Z=request.Z,
-        E_n=request.E_n,
-        F_n=request.F_n,
-    )
-    sphere = TimeSphere(initial_inputs=inputs)
-    selected_preset, preset_fallback = apply_preset_rules(
-        sphere,
-        request.preset or PRESET_DEFAULT,
-        request,
-    )
-    result = sphere.simulate(steps=request.steps)
-    payload = result.to_dict()
-    return SimulationResponse(
-        steps=payload["steps"],
-        summary=payload["summary"],
-        intelligence_history=result.intelligence_history(),
-        selected_preset=selected_preset,
-        preset_fallback=preset_fallback,
-    )
+@limiter.limit("20/minute")
+def simulate(
+    request: SimulationRequest,
+    http_request: Request,
+    authenticated: bool = Depends(verify_api_key),
+) -> SimulationResponse:
+    """
+    Run intelligence simulation with given parameters.
+
+    Args:
+        request: Simulation parameters (A, B, C, X, Y, Z, E_n, F_n, steps, preset)
+        http_request: FastAPI request object (for rate limiting)
+        authenticated: Authentication status (from dependency)
+
+    Returns:
+        Simulation results with intelligence trajectory
+
+    Raises:
+        HTTPException: If parameters are invalid or simulation fails
+    """
+    try:
+        logger.info(
+            "Starting simulation",
+            extra={
+                "extra_fields": {
+                    "preset": request.preset or PRESET_DEFAULT,
+                    "steps": request.steps,
+                }
+            },
+        )
+
+        inputs = AxiomInputs(
+            A=request.A,
+            B=request.B,
+            C=request.C,
+            X=request.X,
+            Y=request.Y,
+            Z=request.Z,
+            E_n=request.E_n,
+            F_n=request.F_n,
+        )
+        sphere = TimeSphere(initial_inputs=inputs)
+        selected_preset, preset_fallback = apply_preset_rules(
+            sphere,
+            request.preset or PRESET_DEFAULT,
+            request,
+        )
+        result = sphere.simulate(steps=request.steps)
+        payload = result.to_dict()
+
+        logger.info(
+            "Simulation completed",
+            extra={
+                "extra_fields": {
+                    "preset": selected_preset,
+                    "final_intelligence": result.intelligence_history()[-1],
+                }
+            },
+        )
+
+        return SimulationResponse(
+            steps=payload["steps"],
+            summary=payload["summary"],
+            intelligence_history=result.intelligence_history(),
+            selected_preset=selected_preset,
+            preset_fallback=preset_fallback,
+        )
+
+    except ValueError as e:
+        logger.error(f"Invalid simulation parameters: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid parameters: {str(e)}",
+        )
+    except Exception as e:
+        logger.error(f"Simulation failed: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Simulation error: {str(e)}",
+        )
 
 
 static_dir = Path(__file__).resolve().parent / "static"
