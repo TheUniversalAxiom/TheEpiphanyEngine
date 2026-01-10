@@ -14,6 +14,7 @@ services:
       # Optional: Enable API authentication
       # - API_KEY_ENABLED=true
       # - API_KEY=your-secret-key-here
+      # - JWT_ENABLED=false
     volumes:
       # Mount for development (comment out for production)
       - ./axiom:/app/axiom

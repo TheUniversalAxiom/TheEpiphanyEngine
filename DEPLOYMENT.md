@@ -70,6 +70,7 @@ docker run -p 8000:8000 epiphany-engine:latest
 docker run -p 8000:8000 \
   -e API_KEY_ENABLED=true \
   -e API_KEY=your-secret-key \
+  -e JWT_ENABLED=false \
   -e LOG_LEVEL=INFO \
   epiphany-engine:latest
 ```
@@ -135,6 +136,7 @@ pip install -r requirements.txt
 ```bash
 export API_KEY_ENABLED=true
 export API_KEY=your-strong-random-key
+export JWT_ENABLED=false
 export JWT_SECRET_KEY=your-jwt-secret
 export LOG_LEVEL=INFO
 export LOG_FORMAT=json
@@ -190,6 +192,7 @@ WorkingDirectory=/opt/epiphany-engine
 Environment="PATH=/opt/epiphany-engine/venv/bin"
 Environment="API_KEY_ENABLED=true"
 Environment="API_KEY=your-secret-key"
+Environment="JWT_ENABLED=false"
 Environment="LOG_LEVEL=INFO"
 ExecStart=/opt/epiphany-engine/venv/bin/gunicorn web.api:app \
   --workers 4 \
@@ -277,7 +280,8 @@ sudo systemctl reload nginx
 |----------|---------|-------------|
 | `API_KEY_ENABLED` | `false` | Enable API key authentication |
 | `API_KEY` | `""` | API key for authentication (X-API-Key header) |
-| `JWT_SECRET_KEY` | `"your-secret-key-change-in-production"` | Secret key for JWT tokens |
+| `JWT_ENABLED` | `false` | Enable JWT token authentication |
+| `JWT_SECRET_KEY` | `"your-secret-key-change-in-production"` | Secret key for JWT tokens (required when `JWT_ENABLED=true`) |
 | `JWT_EXPIRATION_MINUTES` | `60` | JWT token expiration time |
 | `LOG_LEVEL` | `INFO` | Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL) |
 | `LOG_FORMAT` | `json` | Log format (`json` or `simple`) |
@@ -292,6 +296,7 @@ services:
     environment:
       - API_KEY_ENABLED=true
       - API_KEY=your-secret-key-here
+      - JWT_ENABLED=false
       - LOG_LEVEL=INFO
       - LOG_FORMAT=json
     ports:

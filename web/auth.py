@@ -17,6 +17,7 @@ from pydantic import BaseModel
 # Configuration from environment variables
 API_KEY_ENABLED = os.getenv("API_KEY_ENABLED", "false").lower() == "true"
 API_KEY = os.getenv("API_KEY", "")
+JWT_ENABLED = os.getenv("JWT_ENABLED", "false").lower() == "true"
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_MINUTES = int(os.getenv("JWT_EXPIRATION_MINUTES", "60"))
@@ -28,13 +29,13 @@ if API_KEY_ENABLED and not API_KEY:
         "Please set the API_KEY environment variable."
     )
 
-if API_KEY_ENABLED and not JWT_SECRET_KEY:
+if JWT_ENABLED and not JWT_SECRET_KEY:
     raise ValueError(
-        "API_KEY_ENABLED is true but JWT_SECRET_KEY is not set. "
+        "JWT_ENABLED is true but JWT_SECRET_KEY is not set. "
         "Please set JWT_SECRET_KEY to a secure random value (minimum 32 characters)."
     )
 
-if JWT_SECRET_KEY and len(JWT_SECRET_KEY) < 32:
+if JWT_ENABLED and JWT_SECRET_KEY and len(JWT_SECRET_KEY) < 32:
     raise ValueError(
         "JWT_SECRET_KEY must be at least 32 characters long for security. "
         "Please use a cryptographically secure random string."
@@ -59,6 +60,11 @@ class AuthConfig:
     def is_enabled() -> bool:
         """Check if authentication is enabled."""
         return API_KEY_ENABLED
+
+    @staticmethod
+    def is_jwt_enabled() -> bool:
+        """Check if JWT authentication is enabled."""
+        return JWT_ENABLED
 
     @staticmethod
     def get_api_key() -> str:
@@ -109,6 +115,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     Returns:
         Encoded JWT token
     """
+    if not AuthConfig.is_jwt_enabled():
+        raise ValueError("JWT authentication is disabled. Set JWT_ENABLED=true to create tokens.")
+
     to_encode = data.copy()
 
     if expires_delta:
@@ -135,7 +144,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Security(bearer_sch
     Raises:
         HTTPException: If token is invalid or expired
     """
-    if not AuthConfig.is_enabled():
+    if not AuthConfig.is_jwt_enabled():
         return TokenData()  # Authentication disabled
 
     if not credentials:

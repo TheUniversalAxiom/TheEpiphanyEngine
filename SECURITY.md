@@ -89,6 +89,7 @@ python -c "import secrets; print(secrets.token_urlsafe(48))"
 ```bash
 API_KEY_ENABLED=true
 API_KEY=<generated-secure-key>
+JWT_ENABLED=false
 JWT_SECRET_KEY=<generated-secure-secret>
 JWT_EXPIRATION_MINUTES=60
 ```
@@ -159,6 +160,7 @@ limiter = Limiter(key_func=get_remote_address, default_limits=["200/hour"])
 **Required for production:**
 ```bash
 API_KEY=<32+ character random string>
+JWT_ENABLED=false
 JWT_SECRET_KEY=<32+ character random string>
 CORS_ORIGINS=https://your-domain.com
 ENVIRONMENT=production
