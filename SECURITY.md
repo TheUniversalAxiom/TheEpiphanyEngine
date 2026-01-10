@@ -19,7 +19,7 @@ We take the security of The Epiphany Engine seriously. If you discover a securit
 
 Instead, please report security vulnerabilities by:
 
-1. **Email**: Send details to [axiom@i4aneye.com](mailto:axiom@i4aneye.com)
+1. **Email**: Send details to [axiom@i4ANeYe.com](mailto:axiom@i4ANeYe.com)
 2. **GitHub Security Advisories**: Use the [GitHub Security Advisory](https://github.com/TheUniversalAxiom/TheEpiphanyEngine/security/advisories/new) feature for private disclosure
 3. **Encrypted Communication**: For sensitive vulnerabilities, request our PGP key
 
@@ -330,7 +330,7 @@ For security-related questions or concerns:
 
 - **Security Issues**: Use GitHub Security Advisories (preferred)
 - **General Questions**: Open a GitHub Discussion
-- **Private Disclosure**: [security@theepiphanyengine.org](mailto:security@theepiphanyengine.org)
+- **Private Disclosure**: [axiom@i4ANeYe.com](mailto:axiom@i4ANeYe.com)
 
 ## Acknowledgments
 
