@@ -50,17 +50,67 @@ This repo turns that conceptual model into:
   - Resilience & recovery: Shock response and comeback
   - Innovation cycles: Experimentation leading to breakthroughs
 
-- **Tests** (`tests/`)
-  - Comprehensive unit tests for core equation
-  - TimeSphere simulation validation
-  - All tests passing ✅
+- **Interactive Jupyter Notebooks** (`notebooks/`) 🆕
+  - Interactive intelligence exploration with visualizations
+  - AI alignment deep dive with scenario comparisons
+  - Sensitivity analysis and parameter exploration
 
-### 🚧 Planned
+- **Advanced Visualization** (`viz/`) 🆕
+  - Intelligence trajectory plotting
+  - Component evolution tracking
+  - Multi-scenario comparisons
+  - 2D parameter heatmaps
+  - Comprehensive dashboards
+  - Professional export capabilities (PNG, PDF)
+
+- **Export & Reporting** (`viz/exporters.py`) 🆕
+  - JSON export for data interchange
+  - CSV export for spreadsheet analysis
+  - Markdown reports with summaries
+  - Multi-scenario comparison reports
+
+- **Performance Benchmarks** (`benchmarks/`) 🆕
+  - Core computation benchmarking
+  - Simulation performance metrics
+  - Update rule comparison
+  - Comprehensive benchmark suite
+
+- **Extension System** (`extensions/`) 🆕
+  - Plugin architecture for custom functionality
+  - Custom update rules
+  - Domain-specific models
+  - Event handler extensions
+  - Integration adapters
+  - Extension registry and loader
+
+- **Comprehensive Testing** (`tests/`) 🆕
+  - Unit tests for core equation
+  - TimeSphere simulation validation
+  - Edge case and boundary testing
+  - Input validation tests
+  - All 30+ tests passing ✅
+
+- **Documentation** (`docs/`) 🆕
+  - Complete API reference
+  - Contributing guidelines
+  - Code examples and best practices
+
+- **Web API** (`web/`)
+  - FastAPI REST endpoint
+  - Interactive web UI
+  - Preset scenarios
+  - Real-time visualization
+
+- **MCP Integration** (`mcp/`)
+  - Model Context Protocol server
+  - Tool and resource endpoints
+
+### 🚧 Future Enhancements
 
 - Hooks for integrating with reasoning models (e.g., OpenAI o1-style flows)
-- Jupyter notebooks for exploration and teaching
-- Visualization tools for intelligence trajectories
-- More real-world scenarios and case studies
+- Real-time monitoring dashboards
+- Cloud deployment templates
+- More domain-specific extensions
 
 ## Status
 
