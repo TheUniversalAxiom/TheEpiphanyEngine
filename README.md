@@ -27,7 +27,7 @@ This repo turns that conceptual model into:
 
 - **Subjectivity Scale** (`axiom/subjectivity_scale.py`)
   - 7-tier objectivity/subjectivity measurement
-  - Derives X from observation signals (noise, emotion, bias)
+  - Derives X from observation signals (linear, shallow, bias)
   - Configurable thresholds and labels
 
 - **TimeSphere Simulation Engine** (`engine/timesphere.py`)
