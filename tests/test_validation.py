@@ -261,31 +261,38 @@ class TestSubjectivityScale:
     def test_all_zero_signals(self):
         """Test subjectivity with all zero signals."""
         level, label = determine_subjectivity(
-            noise_level=0.0,
-            emotional_influence=0.0,
-            bias_factor=0.0
+            noise=0.0,
+            emotional_volatility=0.0,
+            bias_indicator=0.0
         )
         assert level >= 0.0
-        assert label in ['apex-objective', 'near-objective', 'objective-leaning',
-                        'balanced', 'subjective-leaning', 'near-subjective', 'apex-subjective']
+        assert label in [
+            'apex-objective',
+            'objective',
+            'base-static',
+            'mid-dynamic',
+            'high-subjective',
+            'apex-dynamic',
+            'apex-subjective',
+        ]
 
     def test_all_max_signals(self):
         """Test subjectivity with all maximum signals."""
         level, label = determine_subjectivity(
-            noise_level=1.0,
-            emotional_influence=1.0,
-            bias_factor=1.0
+            noise=1.0,
+            emotional_volatility=1.0,
+            bias_indicator=1.0
         )
         assert level > 0.5
-        assert label in ['subjective-leaning', 'near-subjective', 'apex-subjective']
+        assert label in ['high-subjective', 'apex-dynamic', 'apex-subjective']
 
     def test_nan_signal_handling(self):
         """Test that NaN signals are handled gracefully."""
         import math
         level, label = determine_subjectivity(
-            noise_level=math.nan,
-            emotional_influence=0.5,
-            bias_factor=0.5
+            noise=math.nan,
+            emotional_volatility=0.5,
+            bias_indicator=0.5
         )
         # Should handle NaN and return a valid result
         assert isinstance(level, float)

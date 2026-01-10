@@ -78,6 +78,29 @@ def x_from_observations(
     return float(score)
 
 
+def determine_subjectivity(
+    noise: float = 0.0,
+    emotional_volatility: float = 0.0,
+    bias_indicator: float = 0.0,
+    *,
+    weights: Optional[Dict[str, float]] = None,
+    normalize: bool = True,
+) -> Tuple[float, str]:
+    """
+    Derive subjectivity score and label from observation-level signals.
+
+    Returns a tuple of (x, label).
+    """
+    x = x_from_observations(
+        noise=noise,
+        emotional_volatility=emotional_volatility,
+        bias_indicator=bias_indicator,
+        weights=weights,
+        normalize=normalize,
+    )
+    return x, label_x(x)
+
+
 def label_x(x: float, thresholds: Optional[Iterable[float]] = None, labels: Optional[Iterable[str]] = None) -> str:
     """
     Map numeric x -> qualitative label based on thresholds.

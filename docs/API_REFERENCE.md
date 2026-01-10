@@ -153,18 +153,21 @@ Determine subjectivity level from observation signals.
 **Signature:**
 ```python
 def determine_subjectivity(
-    noise_level: float,
-    emotional_influence: float,
-    bias_factor: float,
-    weights: Optional[Dict[str, float]] = None
+    noise: float = 0.0,
+    emotional_volatility: float = 0.0,
+    bias_indicator: float = 0.0,
+    *,
+    weights: Optional[Dict[str, float]] = None,
+    normalize: bool = True
 ) -> Tuple[float, str]
 ```
 
 **Parameters:**
-- `noise_level` (float): Signal noise [0, 1]
-- `emotional_influence` (float): Emotional component [0, 1]
-- `bias_factor` (float): Cognitive bias strength [0, 1]
+- `noise` (float): Signal noise (higher -> more subjectivity)
+- `emotional_volatility` (float): Emotional component (higher -> more subjectivity)
+- `bias_indicator` (float): Cognitive bias strength (higher -> more subjectivity)
 - `weights` (dict, optional): Custom weights for each signal
+- `normalize` (bool): If True, clamp computed value to [0, 1]
 
 **Returns:**
 - Tuple of (subjectivity_score, label)
@@ -172,22 +175,22 @@ def determine_subjectivity(
   - label (str): One of 7 tiers
 
 **7-Tier Scale:**
-1. apex-objective (0.00 - 0.05)
-2. near-objective (0.05 - 0.20)
-3. objective-leaning (0.20 - 0.40)
-4. balanced (0.40 - 0.60)
-5. subjective-leaning (0.60 - 0.80)
-6. near-subjective (0.80 - 0.95)
-7. apex-subjective (0.95 - 1.00)
+1. apex-objective (<= 0.00)
+2. objective (0.00 - 0.15]
+3. base-static (0.15 - 0.33]
+4. mid-dynamic (0.33 - 0.50]
+5. high-subjective (0.50 - 0.67]
+6. apex-dynamic (0.67 - 0.85]
+7. apex-subjective (0.85 - 1.00]
 
 **Example:**
 ```python
 from axiom.subjectivity_scale import determine_subjectivity
 
 level, label = determine_subjectivity(
-    noise_level=0.2,
-    emotional_influence=0.3,
-    bias_factor=0.1
+    noise=0.2,
+    emotional_volatility=0.3,
+    bias_indicator=0.1
 )
 print(f"Subjectivity: {level:.2f} ({label})")
 ```
