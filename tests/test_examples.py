@@ -50,9 +50,9 @@ def test_corruption_decay_scenario_behavior():
         F_n=3.0,
     )
     sphere = TimeSphere(initial_inputs=initial_inputs)
-    sphere.add_update_rule("A", UpdateRules.decay(rate=0.08, min_val=0.1, variable="A"))
-    sphere.add_update_rule("B", UpdateRules.decay(rate=0.06, min_val=0.2, variable="B"))
-    sphere.add_update_rule("C", UpdateRules.decay(rate=0.02, min_val=0.5, variable="C"))
+    sphere.add_update_rule("A", UpdateRules.decay(rate=0.08, min_value=0.1, variable="A"))
+    sphere.add_update_rule("B", UpdateRules.decay(rate=0.06, min_value=0.2, variable="B"))
+    sphere.add_update_rule("C", UpdateRules.decay(rate=0.02, min_value=0.5, variable="C"))
 
     def x_corruption_rule(state, step):
         noise = min(1.0, 0.1 * step)
@@ -61,9 +61,9 @@ def test_corruption_decay_scenario_behavior():
         return x_from_observations(noise=noise, emotional_volatility=emotion, bias_indicator=bias)
 
     sphere.add_update_rule("X", x_corruption_rule)
-    sphere.add_update_rule("Y", UpdateRules.decay(rate=0.10, min_val=0.1, variable="Y"))
-    sphere.add_update_rule("Z", UpdateRules.decay(rate=0.07, min_val=0.3, variable="Z"))
-    sphere.add_update_rule("E_n", UpdateRules.decay(rate=0.05, min_val=1.0, variable="E_n"))
+    sphere.add_update_rule("Y", UpdateRules.decay(rate=0.10, min_value=0.1, variable="Y"))
+    sphere.add_update_rule("Z", UpdateRules.decay(rate=0.07, min_value=0.3, variable="Z"))
+    sphere.add_update_rule("E_n", UpdateRules.decay(rate=0.05, min_value=1.0, variable="E_n"))
     sphere.add_update_rule("F_n", lambda s, step: max(0.0, s.inputs.F_n - 0.3))
 
     result = sphere.simulate(steps=12)
@@ -100,11 +100,11 @@ def test_divergent_paths_behavior():
 
     sphere_b = TimeSphere(initial_inputs=initial_inputs)
     sphere_b.add_update_rule("A", UpdateRules.oscillate(amplitude=0.2, period=5, baseline=0.5))
-    sphere_b.add_update_rule("B", UpdateRules.decay(rate=0.03, min_val=0.3, variable="B"))
+    sphere_b.add_update_rule("B", UpdateRules.decay(rate=0.03, min_value=0.3, variable="B"))
     sphere_b.add_update_rule("C", lambda s, step: max(0.4, s.inputs.C - 0.01))
     sphere_b.add_update_rule("X", lambda s, step: max(0.2, s.inputs.X - 0.04))
     sphere_b.add_update_rule("Y", UpdateRules.oscillate(amplitude=0.25, period=4, baseline=0.4))
-    sphere_b.add_update_rule("Z", UpdateRules.decay(rate=0.04, min_val=0.3, variable="Z"))
+    sphere_b.add_update_rule("Z", UpdateRules.decay(rate=0.04, min_value=0.3, variable="Z"))
     sphere_b.add_update_rule("E_n", lambda s, step: max(1.0, s.inputs.E_n * 0.95))
     sphere_b.add_update_rule("F_n", lambda s, step: max(0.0, s.inputs.F_n - 0.1))
 
@@ -190,12 +190,12 @@ def test_resilience_recovery_behavior():
     sphere = TimeSphere(initial_inputs=initial_inputs)
     shock_step = 4
 
-    def shock_then_recover(variable, *, drop_factor, recovery_rate, min_val=0.0, max_val=1.0):
+    def shock_then_recover(variable, *, drop_factor, recovery_rate, min_value=0.0, max_value=1.0):
         def rule(state, step):
             current = getattr(state.inputs, variable)
             if step == shock_step:
-                return max(min_val, current * drop_factor)
-            return min(max_val, current + recovery_rate)
+                return max(min_value, current * drop_factor)
+            return min(max_value, current + recovery_rate)
 
         return rule
 

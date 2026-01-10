@@ -38,13 +38,13 @@ def run_corruption_scenario():
 
     # Define corruption dynamics
     # A decays as values corrupt
-    sphere.add_update_rule("A", UpdateRules.decay(rate=0.08, min_val=0.1, variable="A"))
+    sphere.add_update_rule("A", UpdateRules.decay(rate=0.08, min_value=0.1, variable="A"))
 
     # B decays as behaviors misalign
-    sphere.add_update_rule("B", UpdateRules.decay(rate=0.06, min_val=0.2, variable="B"))
+    sphere.add_update_rule("B", UpdateRules.decay(rate=0.06, min_value=0.2, variable="B"))
 
     # C remains relatively stable (infrastructure doesn't degrade as fast)
-    sphere.add_update_rule("C", UpdateRules.decay(rate=0.02, min_val=0.5, variable="C"))
+    sphere.add_update_rule("C", UpdateRules.decay(rate=0.02, min_value=0.5, variable="C"))
 
     # X decays (increasing subjectivity) - key corruption indicator
     def x_corruption_rule(state, step):
@@ -57,13 +57,13 @@ def run_corruption_scenario():
     sphere.add_update_rule("X", x_corruption_rule)
 
     # Y decays as output quality degrades
-    sphere.add_update_rule("Y", UpdateRules.decay(rate=0.10, min_val=0.1, variable="Y"))
+    sphere.add_update_rule("Y", UpdateRules.decay(rate=0.10, min_value=0.1, variable="Y"))
 
     # Z decays as errors increase
-    sphere.add_update_rule("Z", UpdateRules.decay(rate=0.07, min_val=0.3, variable="Z"))
+    sphere.add_update_rule("Z", UpdateRules.decay(rate=0.07, min_value=0.3, variable="Z"))
 
     # E_n decays (losing energy/momentum)
-    sphere.add_update_rule("E_n", UpdateRules.decay(rate=0.05, min_val=1.0, variable="E_n"))
+    sphere.add_update_rule("E_n", UpdateRules.decay(rate=0.05, min_value=1.0, variable="E_n"))
 
     # F_n decays as feedback loops break down
     sphere.add_update_rule("F_n", lambda s, step: max(0.0, s.inputs.F_n - 0.3))

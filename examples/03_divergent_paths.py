@@ -59,11 +59,11 @@ def run_divergent_paths_scenario():
 
     # Oscillating, degrading variables
     sphere_b.add_update_rule("A", UpdateRules.oscillate(amplitude=0.2, period=5, baseline=0.5))
-    sphere_b.add_update_rule("B", UpdateRules.decay(rate=0.03, min_val=0.3, variable="B"))
+    sphere_b.add_update_rule("B", UpdateRules.decay(rate=0.03, min_value=0.3, variable="B"))
     sphere_b.add_update_rule("C", lambda s, step: max(0.4, s.inputs.C - 0.01))
     sphere_b.add_update_rule("X", lambda s, step: max(0.2, s.inputs.X - 0.04))  # Increasing subjectivity
     sphere_b.add_update_rule("Y", UpdateRules.oscillate(amplitude=0.25, period=4, baseline=0.4))
-    sphere_b.add_update_rule("Z", UpdateRules.decay(rate=0.04, min_val=0.3, variable="Z"))
+    sphere_b.add_update_rule("Z", UpdateRules.decay(rate=0.04, min_value=0.3, variable="Z"))
     sphere_b.add_update_rule("E_n", lambda s, step: max(1.0, s.inputs.E_n * 0.95))  # Gradual energy loss
     sphere_b.add_update_rule("F_n", lambda s, step: max(0.0, s.inputs.F_n - 0.1))
 

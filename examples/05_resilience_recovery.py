@@ -8,14 +8,22 @@ from engine.state import AxiomInputs
 from engine.timesphere import TimeSphere
 
 
-def shock_then_recover(variable, *, shock_step, drop_factor, recovery_rate, min_val=0.0, max_val=1.0):
+def shock_then_recover(
+    variable,
+    *,
+    shock_step,
+    drop_factor,
+    recovery_rate,
+    min_value=0.0,
+    max_value=1.0,
+):
     """Apply a one-time shock, then steady recovery."""
 
     def rule(state, step):
         current = getattr(state.inputs, variable)
         if step == shock_step:
-            return max(min_val, current * drop_factor)
-        return min(max_val, current + recovery_rate)
+            return max(min_value, current * drop_factor)
+        return min(max_value, current + recovery_rate)
 
     return rule
 

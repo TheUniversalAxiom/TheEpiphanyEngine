@@ -24,8 +24,8 @@ class MomentumUpdateRule(UpdateRuleExtension):
         variable: str,
         momentum_factor: float = 0.9,
         acceleration: float = 0.1,
-        min_val: float = 0.0,
-        max_val: float = 1.0,
+        min_value: float = 0.0,
+        max_value: float = 1.0,
     ):
         """
         Initialize momentum update rule.
@@ -34,15 +34,15 @@ class MomentumUpdateRule(UpdateRuleExtension):
             variable: Variable name to track momentum for
             momentum_factor: How much to retain previous momentum (0-1)
             acceleration: Acceleration multiplier
-            min_val: Minimum allowed value
-            max_val: Maximum allowed value
+            min_value: Minimum allowed value
+            max_value: Maximum allowed value
         """
         super().__init__()
         self.variable = variable
         self.momentum_factor = momentum_factor
         self.acceleration = acceleration
-        self.min_val = min_val
-        self.max_val = max_val
+        self.min_value = min_value
+        self.max_value = max_value
         self._previous_value = None
         self._velocity = 0.0
 
@@ -78,7 +78,7 @@ class MomentumUpdateRule(UpdateRuleExtension):
             new_value = current_value + self._velocity * self.acceleration
 
             # Clamp to valid range
-            new_value = max(self.min_val, min(self.max_val, new_value))
+            new_value = max(self.min_value, min(self.max_value, new_value))
 
             # Update tracking
             self._previous_value = current_value
