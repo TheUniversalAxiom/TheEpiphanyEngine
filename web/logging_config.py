@@ -4,12 +4,29 @@ Structured logging configuration for Epiphany Engine.
 Provides JSON-formatted logging with context tracking.
 """
 
+import contextvars
 import json
 import logging
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+
+request_id_var: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar(
+    "request_id",
+    default=None,
+)
+user_var: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar("user", default=None)
+
+
+def get_request_id() -> Optional[str]:
+    """Return the current request id from contextvars."""
+    return request_id_var.get()
+
+
+def get_user() -> Optional[str]:
+    """Return the current user from contextvars."""
+    return user_var.get()
 
 
 class JSONFormatter(logging.Formatter):
@@ -48,11 +65,17 @@ class JSONFormatter(logging.Formatter):
             log_data.update(record.extra_fields)
 
         # Add request context if available
-        if hasattr(record, "request_id"):
-            log_data["request_id"] = record.request_id
+        request_id = getattr(record, "request_id", None)
+        if request_id is None:
+            request_id = request_id_var.get()
+        if request_id is not None:
+            log_data["request_id"] = request_id
 
-        if hasattr(record, "user"):
-            log_data["user"] = record.user
+        user = getattr(record, "user", None)
+        if user is None:
+            user = user_var.get()
+        if user is not None:
+            log_data["user"] = user
 
         return json.dumps(log_data)
 
@@ -130,26 +153,23 @@ class LogContext:
             logger.info("Processing request")
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, request_id: Optional[str] = None, user: Optional[str] = None):
         """Initialize with extra fields to add to logs."""
-        self.extra_fields = kwargs
-        self.old_factory = None
+        self.request_id = request_id
+        self.user = user
+        self.tokens: Dict[str, contextvars.Token] = {}
 
     def __enter__(self):
         """Add extra fields to log records."""
-        old_factory = logging.getLogRecordFactory()
-        self.old_factory = old_factory
-
-        def record_factory(*args, **kwargs):
-            record = old_factory(*args, **kwargs)
-            for key, value in self.extra_fields.items():
-                setattr(record, key, value)
-            return record
-
-        logging.setLogRecordFactory(record_factory)
+        if self.request_id is not None:
+            self.tokens["request_id"] = request_id_var.set(self.request_id)
+        if self.user is not None:
+            self.tokens["user"] = user_var.set(self.user)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """Restore original log record factory."""
-        if self.old_factory:
-            logging.setLogRecordFactory(self.old_factory)
+        """Reset context variables."""
+        if "request_id" in self.tokens:
+            request_id_var.reset(self.tokens["request_id"])
+        if "user" in self.tokens:
+            user_var.reset(self.tokens["user"])
