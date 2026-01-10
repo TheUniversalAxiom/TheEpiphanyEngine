@@ -232,6 +232,7 @@ docker run -p 8000:8000 epiphany-engine:latest
 # Set environment variables
 export API_KEY_ENABLED=true
 export API_KEY=$(openssl rand -hex 32)
+export JWT_ENABLED=false
 export LOG_LEVEL=INFO
 
 # Run with Gunicorn
