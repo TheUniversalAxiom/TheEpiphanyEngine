@@ -1,5 +1,5 @@
 """
-7-threshold subjectivity → objectivity scale and helpers.
+7-threshold Axiomatic Subjectivity Scale (X) and helpers.
 
 Provides:
 - x_from_observations(noise, emotional_volatility, bias_indicator, weights=...)

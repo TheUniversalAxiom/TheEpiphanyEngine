@@ -2,10 +2,20 @@
 Core Axiom: Intelligence computation and simple recurrences.
 
 Implements:
-- E_n recurrence (linear recurrence e.g., E_n = a * E_{n-1} + b)
+- E_n recurrence (Exponential Growth, linear recurrence e.g., E_n = a * E_{n-1} + b)
 - F_n recurrence / Fibonacci helper
 - compute_intelligence(A, B, C, X, Y, Z, E_n, F_n)
 - optional symbolic representation using sympy (if available)
+
+Component meanings:
+- A: Impulses
+- B: Elements
+- C: Pressure
+- X: Axiomatic Subjectivity Scale
+- Y: Why Axis
+- Z: TimeSphere
+- E_n: Exponential Growth
+- F_n: Fibonacci Sequence
 """
 import math
 from typing import Dict, Iterable, Optional, Tuple, Union

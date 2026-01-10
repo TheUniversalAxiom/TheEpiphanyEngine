@@ -20,6 +20,19 @@ except Exception:
 
 @dataclass
 class AxiomInputs:
+    """
+    Inputs for the Universal Axiom.
+
+    A: Impulses
+    B: Elements
+    C: Pressure
+    X: Axiomatic Subjectivity Scale
+    Y: Why Axis
+    Z: TimeSphere
+    E_n: Exponential Growth
+    F_n: Fibonacci Sequence
+    """
+
     A: float
     B: float
     C: float
