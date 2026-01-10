@@ -2,9 +2,9 @@
 
 This project defines skills using the **Universal Axiom Organic Intelligence Model**:
 
-\[
+[
 \text{Intelligence}_n = E_n \cdot (1 + F_n) \cdot X \cdot Y \cdot Z \cdot (A \cdot B \cdot C)
-\]
+]
 
 We treat each skill as a repeatable capability that improves by strengthening the
 axiom components below.
