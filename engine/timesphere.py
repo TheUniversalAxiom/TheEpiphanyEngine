@@ -337,6 +337,8 @@ class UpdateRules:
         import math
 
         def rule(state: SystemState, step: int) -> float:
-            return baseline + amplitude * math.sin(2 * math.pi * step / period)
+            value = baseline + amplitude * math.sin(2 * math.pi * step / period)
+            # Clamp to [0, 1] to match bounded input semantics.
+            return min(1.0, max(0.0, value))
 
         return rule
