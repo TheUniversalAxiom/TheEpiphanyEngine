@@ -212,7 +212,7 @@ def plot_sensitivity_analysis(
         try:
             score, _ = compute_func(**config, return_components=True)
             scores.append(score)
-        except:
+        except TypeError:
             score = compute_func(**config)
             scores.append(score)
 
@@ -350,7 +350,7 @@ def plot_heatmap_2d(
             try:
                 score, _ = compute_func(**config, return_components=True)
                 Z[i, j] = score
-            except:
+            except TypeError:
                 Z[i, j] = compute_func(**config)
 
     fig, ax = plt.subplots(figsize=figsize)

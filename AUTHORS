@@ -1,0 +1,30 @@
+# The Epiphany Engine Contributors
+
+This file lists the contributors to The Epiphany Engine project.
+
+## Project Maintainers
+
+The project is currently maintained by TheUniversalAxiom organization.
+
+## Contributors
+
+Contributors are listed in alphabetical order. This list is automatically
+generated from git commit history. To see detailed contribution statistics,
+use: `git shortlog -sn`
+
+---
+
+## How to Contribute
+
+We welcome contributions! Please see CONTRIBUTING.md for guidelines on how
+to contribute to this project.
+
+## Recognition
+
+All contributors are recognized for their valuable contributions to The
+Epiphany Engine project. Thank you for helping make this project better!
+
+---
+
+For a complete list of all contributors with detailed statistics, please visit:
+https://github.com/TheUniversalAxiom/TheEpiphanyEngine/graphs/contributors
