@@ -287,7 +287,8 @@ class UpdateRules:
     @staticmethod
     def linear_growth(
         rate: float,
-        max_val: float = 1.0,
+        max_value: float = 1.0,
+        min_value: float = 0.0,
         *,
         variable: str = "A",
     ) -> Callable[[SystemState, int], float]:
@@ -297,7 +298,7 @@ class UpdateRules:
             inputs = state.inputs.to_dict()
             current = inputs.get(variable, 0.0)  # default lookup
             new_val = current + rate
-            return min(max_val, max(0.0, new_val))
+            return min(max_value, max(min_value, new_val))
 
         return rule
 
@@ -318,7 +319,7 @@ class UpdateRules:
     @staticmethod
     def decay(
         rate: float,
-        min_val: float = 0.0,
+        min_value: float = 0.0,
         *,
         variable: str = "A",
     ) -> Callable[[SystemState, int], float]:
@@ -328,7 +329,7 @@ class UpdateRules:
             inputs = state.inputs.to_dict()
             current = inputs.get(variable, 1.0)
             new_val = current * (1.0 - rate)
-            return max(min_val, new_val)
+            return max(min_value, new_val)
 
         return rule
 
