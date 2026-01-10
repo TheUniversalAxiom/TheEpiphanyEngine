@@ -1,7 +1,8 @@
 import logging
+import os
 import time
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional, Tuple
 
 from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
@@ -24,6 +25,19 @@ logger = get_logger(__name__)
 # Initialize rate limiter
 limiter = Limiter(key_func=get_remote_address, default_limits=["100/hour"])
 
+# CORS configuration from environment
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "").strip()
+if CORS_ORIGINS:
+    # Split comma-separated origins and remove whitespace
+    ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ORIGINS.split(",") if origin.strip()]
+else:
+    # Default to localhost for development
+    ALLOWED_ORIGINS = ["http://localhost:8000", "http://localhost:3000"]
+    logger.warning(
+        "CORS_ORIGINS not set, using default localhost origins. "
+        "Set CORS_ORIGINS environment variable for production."
+    )
+
 
 class SimulationRequest(BaseModel):
     A: float = Field(..., ge=0.0, le=1.0)
@@ -35,7 +49,7 @@ class SimulationRequest(BaseModel):
     E_n: float = Field(..., ge=0.0)
     F_n: float = Field(...)
     steps: int = Field(10, ge=1, le=250)
-    preset: str | None = Field(None, description="Update-rule preset identifier")
+    preset: Optional[str] = Field(None, description="Update-rule preset identifier")
 
 
 class SimulationResponse(BaseModel):
@@ -61,10 +75,10 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-API-Key"],
 )
 
 
@@ -184,7 +198,7 @@ def apply_preset_rules(
     sphere: TimeSphere,
     preset: str,
     request: SimulationRequest,
-) -> tuple[str, bool]:
+) -> Tuple[str, bool]:
     presets = {
         "baseline": lambda: [
             sphere.add_update_rule(var, UpdateRules.constant(getattr(request, var)))
