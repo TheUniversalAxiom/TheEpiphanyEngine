@@ -28,25 +28,25 @@ def export_to_json(
     data = {
         "metadata": {
             "export_time": datetime.now().isoformat(),
-            "total_steps": len(result.history),
+            "total_steps": len(result.steps),
         },
         "history": []
     }
 
     # Export each time step
-    for step in result.history:
+    for step in result.steps:
         step_data = {
             "step": step.step,
-            "intelligence": step.intelligence,
+            "intelligence": step.intelligence.score,
             "inputs": {
-                "A": step.inputs.A,
-                "B": step.inputs.B,
-                "C": step.inputs.C,
-                "X": step.inputs.X,
-                "Y": step.inputs.Y,
-                "Z": step.inputs.Z,
-                "E_n": step.inputs.E_n,
-                "F_n": step.inputs.F_n,
+                "A": step.state.inputs.A,
+                "B": step.state.inputs.B,
+                "C": step.state.inputs.C,
+                "X": step.state.inputs.X,
+                "Y": step.state.inputs.Y,
+                "Z": step.state.inputs.Z,
+                "E_n": step.state.inputs.E_n,
+                "F_n": step.state.inputs.F_n,
             }
         }
         data["history"].append(step_data)
@@ -80,7 +80,7 @@ def export_to_csv(
         if include_metadata:
             writer.writerow(["# EPIPHANY Engine Simulation Export"])
             writer.writerow(["# Export Time", datetime.now().isoformat()])
-            writer.writerow(["# Total Steps", len(result.history)])
+            writer.writerow(["# Total Steps", len(result.steps)])
             writer.writerow([])
 
         # Header
@@ -89,18 +89,18 @@ def export_to_csv(
         ])
 
         # Data rows
-        for step in result.history:
+        for step in result.steps:
             writer.writerow([
                 step.step,
-                f"{step.intelligence:.6f}",
-                f"{step.inputs.A:.4f}",
-                f"{step.inputs.B:.4f}",
-                f"{step.inputs.C:.4f}",
-                f"{step.inputs.X:.4f}",
-                f"{step.inputs.Y:.4f}",
-                f"{step.inputs.Z:.4f}",
-                f"{step.inputs.E_n:.4f}",
-                f"{step.inputs.F_n:.4f}",
+                f"{step.intelligence.score:.6f}",
+                f"{step.state.inputs.A:.4f}",
+                f"{step.state.inputs.B:.4f}",
+                f"{step.state.inputs.C:.4f}",
+                f"{step.state.inputs.X:.4f}",
+                f"{step.state.inputs.Y:.4f}",
+                f"{step.state.inputs.Z:.4f}",
+                f"{step.state.inputs.E_n:.4f}",
+                f"{step.state.inputs.F_n:.4f}",
             ])
 
         # Summary statistics
@@ -133,7 +133,7 @@ def export_to_markdown(
     # Title and metadata
     lines.append(f"# {title}\n")
     lines.append(f"**Export Time:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-    lines.append(f"**Total Steps:** {len(result.history)}\n")
+    lines.append(f"**Total Steps:** {len(result.steps)}\n")
     lines.append("")
 
     # Summary statistics
@@ -154,18 +154,18 @@ def export_to_markdown(
     lines.append("| Step | Intelligence | A | B | C | X | Y | Z | E_n | F_n |")
     lines.append("|------|-------------|---|---|---|---|---|---|-----|-----|")
 
-    history = result.history if max_rows is None else result.history[:max_rows]
+    history = result.steps if max_rows is None else result.steps[:max_rows]
 
     for step in history:
         lines.append(
-            f"| {step.step} | {step.intelligence:.4f} | "
-            f"{step.inputs.A:.2f} | {step.inputs.B:.2f} | {step.inputs.C:.2f} | "
-            f"{step.inputs.X:.2f} | {step.inputs.Y:.2f} | {step.inputs.Z:.2f} | "
-            f"{step.inputs.E_n:.2f} | {step.inputs.F_n:.2f} |"
+            f"| {step.step} | {step.intelligence.score:.4f} | "
+            f"{step.state.inputs.A:.2f} | {step.state.inputs.B:.2f} | {step.state.inputs.C:.2f} | "
+            f"{step.state.inputs.X:.2f} | {step.state.inputs.Y:.2f} | {step.state.inputs.Z:.2f} | "
+            f"{step.state.inputs.E_n:.2f} | {step.state.inputs.F_n:.2f} |"
         )
 
-    if max_rows and len(result.history) > max_rows:
-        lines.append(f"\n*... {len(result.history) - max_rows} more rows ...*\n")
+    if max_rows and len(result.steps) > max_rows:
+        lines.append(f"\n*... {len(result.steps) - max_rows} more rows ...*\n")
 
     # Write to file
     with open(filepath, 'w') as f:
@@ -225,8 +225,8 @@ def generate_report(
         lines.append("")
 
         # Initial vs Final state
-        initial = result.history[0]
-        final = result.history[-1]
+        initial = result.steps[0]
+        final = result.steps[-1]
 
         lines.append("### Parameter Evolution\n")
         lines.append("| Parameter | Initial | Final | Change |")
@@ -234,8 +234,8 @@ def generate_report(
 
         params = ['A', 'B', 'C', 'X', 'Y', 'Z', 'E_n', 'F_n']
         for param in params:
-            initial_val = getattr(initial.inputs, param)
-            final_val = getattr(final.inputs, param)
+            initial_val = getattr(initial.state.inputs, param)
+            final_val = getattr(final.state.inputs, param)
             change = final_val - initial_val
             lines.append(
                 f"| {param} | {initial_val:.4f} | {final_val:.4f} | "
@@ -245,7 +245,7 @@ def generate_report(
         lines.append("")
 
         # Bottleneck analysis
-        final_params = {p: getattr(final.inputs, p) for p in ['A', 'B', 'C', 'X', 'Y', 'Z']}
+        final_params = {p: getattr(final.state.inputs, p) for p in ['A', 'B', 'C', 'X', 'Y', 'Z']}
         bottleneck = min(final_params, key=final_params.get)
         lines.append("### Bottleneck Analysis\n")
         lines.append(f"**Primary Bottleneck:** {bottleneck} (value: {final_params[bottleneck]:.3f})\n")
@@ -310,7 +310,7 @@ def export_comparison_csv(
 
         for name, result in results.items():
             summary = result.summary
-            final = result.history[-1]
+            final = result.steps[-1]
 
             writer.writerow([
                 name,
@@ -318,7 +318,7 @@ def export_comparison_csv(
                 f"{summary['total_growth_pct']:.2f}",
                 f"{summary['avg_intelligence']:.4f}",
                 f"{summary['volatility']:.4f}",
-                f"{final.inputs.A:.4f}",
-                f"{final.inputs.B:.4f}",
-                f"{final.inputs.C:.4f}",
+                f"{final.state.inputs.A:.4f}",
+                f"{final.state.inputs.B:.4f}",
+                f"{final.state.inputs.C:.4f}",
             ])
