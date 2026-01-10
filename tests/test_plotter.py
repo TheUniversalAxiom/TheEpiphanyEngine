@@ -16,7 +16,11 @@ def test_plotting_with_simulation_result():
 
     from engine.state import AxiomInputs
     from engine.timesphere import TimeSphere, UpdateRules
-    from viz import plot_component_evolution, plot_intelligence_trajectory
+    from viz import (
+        plot_component_evolution,
+        plot_intelligence_trajectory,
+        plot_scenario_comparison,
+    )
     from viz.plotter import create_dashboard
 
     inputs = AxiomInputs(A=0.4, B=0.4, C=0.4, X=0.6, Y=0.6, Z=0.6, E_n=1.0, F_n=0.0)
@@ -28,8 +32,12 @@ def test_plotting_with_simulation_result():
 
     fig1 = plot_intelligence_trajectory(result, show=False)
     fig2 = plot_component_evolution(result, components=["A", "B", "X"], show=False)
-    fig3 = create_dashboard(result, show=False)
+    fig3 = plot_scenario_comparison(
+        {"baseline": result, "alternate": result},
+        show=False,
+    )
+    fig4 = create_dashboard(result, show=False)
 
-    for fig in (fig1, fig2, fig3):
+    for fig in (fig1, fig2, fig3, fig4):
         assert fig is not None
         plt.close(fig)
