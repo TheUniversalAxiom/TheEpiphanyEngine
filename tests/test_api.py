@@ -51,7 +51,9 @@ class TestHealthEndpoints:
         assert data["status"] == "ok"
         assert "description" in data
         assert "endpoints" in data
-        assert data["endpoints"]["simulate"] == "/api/simulate"
+        endpoints_by_name = {endpoint["name"]: endpoint for endpoint in data["endpoints"]}
+        assert endpoints_by_name["simulate"]["path"] == "/api/simulate"
+        assert endpoints_by_name["simulate"]["method"] == "POST"
         assert "authentication" in data
         assert "cache" in data
         assert data["cache"]["enabled"] is True
