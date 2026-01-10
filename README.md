@@ -337,6 +337,147 @@ print(f"Final Intelligence: {result.summary['final_intelligence']:.4f}")
 print(f"Growth Rate: {result.summary['growth_rate']:.1%}")
 ```
 
+## 🛠️ Development Setup
+
+### Prerequisites
+
+- Python 3.9 or higher
+- pip (Python package manager)
+- Git
+
+### Local Development Quick Start
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/TheUniversalAxiom/TheEpiphanyEngine.git
+   cd TheEpiphanyEngine
+   ```
+
+2. **Create a virtual environment**
+
+   ```bash
+   # Using venv (Python 3.9+)
+   python -m venv venv
+
+   # Activate on Linux/macOS
+   source venv/bin/activate
+
+   # Activate on Windows
+   venv\Scripts\activate
+   ```
+
+3. **Install dependencies**
+
+   ```bash
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+4. **Verify installation**
+
+   ```bash
+   python -c "from axiom.core_equation import compute_intelligence; print('✓ Installation successful')"
+   ```
+
+### Running Tests
+
+#### Run All Tests
+
+```bash
+# Run full test suite
+pytest tests/ -v
+
+# Run with coverage report
+pytest tests/ -v --cov=axiom --cov=engine --cov=web --cov=mcp --cov-report=term
+
+# Run specific test file
+pytest tests/test_core_equation.py -v
+```
+
+#### Expected Output
+
+```
+============== test session starts ==============
+collected 97 items
+
+tests/test_core_equation.py ........      [ 8%]
+tests/test_api.py .........................[ 35%]
+tests/test_validation.py .............    [ 48%]
+...
+
+============== 97 passed in 12.34s ==============
+```
+
+### Running Examples
+
+```bash
+# Run all example scenarios
+python examples/run_all.py
+
+# Run individual examples
+python examples/01_basic_growth.py
+python examples/04_ai_alignment.py
+```
+
+### Running the Web API Locally
+
+```bash
+# Start the development server
+uvicorn web.api:app --reload --host 0.0.0.0 --port 8000
+
+# Server will be available at:
+# - API: http://localhost:8000
+# - Docs: http://localhost:8000/api/docs
+# - Health: http://localhost:8000/api/health
+```
+
+### Code Quality Checks
+
+```bash
+# Format code with Black
+black .
+
+# Lint with Ruff
+ruff check .
+
+# Type check with mypy
+mypy axiom engine --ignore-missing-imports
+
+# Run all pre-commit hooks
+pre-commit run --all-files
+```
+
+### Troubleshooting
+
+#### "ModuleNotFoundError: No module named 'axiom'"
+
+**Solution:** Ensure you're in the project root directory and have activated your virtual environment:
+
+```bash
+cd /path/to/TheEpiphanyEngine
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+export PYTHONPATH=$PYTHONPATH:$(pwd)
+```
+
+#### "pytest: command not found"
+
+**Solution:** Install pytest:
+
+```bash
+pip install pytest pytest-cov
+```
+
+#### Tests fail with import errors
+
+**Solution:** Reinstall dependencies:
+
+```bash
+pip install --upgrade -r requirements.txt
+```
+
+For more detailed development information, see [DEVELOPMENT.md](DEVELOPMENT.md).
+
 ## MCP Server
 
 Run the Universal Axiom MCP server over stdio:

@@ -2,6 +2,22 @@
 
 Thank you for your interest in contributing to The EPIPHANY Engine! This document provides guidelines and information for contributors.
 
+## 🚀 Quick Start for Contributors
+
+Before contributing, please:
+
+1. **Set up your development environment** - See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed instructions
+2. **Run all tests** to ensure your setup works:
+   ```bash
+   pytest tests/ -v
+   ```
+3. **Review existing issues** on GitHub to find areas where you can help
+4. **Read our code style guide** below
+
+For detailed development instructions, IDE setup, debugging tips, and common tasks, see [DEVELOPMENT.md](DEVELOPMENT.md).
+
+---
+
 ## Table of Contents
 
 1. [Code of Conduct](#code-of-conduct)
