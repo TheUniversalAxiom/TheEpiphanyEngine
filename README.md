@@ -6,9 +6,7 @@
 
 The EPIPHANY Engine treats intelligence as a dynamic process governed by a core equation:
 
-\[
-\text{Intelligence}_n = E_n \cdot (1 + F_n) \cdot X \cdot Y \cdot Z \cdot (A \cdot B \cdot C)
-\]
+Intelligence_n = E_n * (1 + F_n) * X * Y * Z * (A * B * C)
 
 This repo turns that conceptual model into:
 
