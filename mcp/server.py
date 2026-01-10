@@ -80,7 +80,10 @@ def _handle_initialize() -> Dict[str, Any]:
     return {
         "protocolVersion": "2024-11-05",
         "serverInfo": {"name": "universal-axiom-mcp", "version": "0.1.0"},
-        "capabilities": {"tools": {}, "resources": {}},
+        "capabilities": {
+            "tools": {"compute_universal_axiom": _tool_schema()},
+            "resources": _list_resources(),
+        },
     }
 
 
@@ -93,6 +96,15 @@ def _handle_tools_call(params: Dict[str, Any]) -> Dict[str, Any]:
     arguments = params.get("arguments", {})
     if name != "compute_universal_axiom":
         raise ValueError(f"Unknown tool: {name}")
+
+    missing = [
+        key
+        for key in _tool_schema()["inputSchema"]["required"]
+        if key not in arguments
+    ]
+    if missing:
+        missing_list = ", ".join(missing)
+        raise ValueError(f"Missing required arguments: {missing_list}")
 
     result = compute_intelligence(
         A=arguments["A"],
