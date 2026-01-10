@@ -2,27 +2,35 @@
 Plotting utilities for visualizing axiom computations and simulation results.
 """
 
-try:
-    import matplotlib.gridspec as gridspec
-    import matplotlib.pyplot as plt
-    import numpy as np
-    from matplotlib.patches import Rectangle
-    HAS_MATPLOTLIB = True
-except ImportError:
-    HAS_MATPLOTLIB = False
+from __future__ import annotations
 
+from importlib.util import find_spec
 from typing import Dict, List, Optional, Tuple
+
+import numpy as np
 
 from engine.timesphere import SimulationResult
 
+HAS_MATPLOTLIB = find_spec("matplotlib") is not None
+_MATPLOTLIB = None
 
-def _check_matplotlib():
-    """Ensure matplotlib is available."""
+
+def _load_matplotlib():
+    """Load matplotlib modules when needed."""
     if not HAS_MATPLOTLIB:
         raise ImportError(
             "Matplotlib is required for visualization. "
             "Install it with: pip install matplotlib"
         )
+
+    global _MATPLOTLIB
+    if _MATPLOTLIB is None:
+        import matplotlib.gridspec as gridspec
+        import matplotlib.pyplot as plt
+
+        _MATPLOTLIB = (gridspec, plt)
+
+    return _MATPLOTLIB
 
 
 def plot_intelligence_trajectory(
@@ -45,7 +53,7 @@ def plot_intelligence_trajectory(
     Returns:
         matplotlib Figure object
     """
-    _check_matplotlib()
+    _, plt = _load_matplotlib()
 
     steps = [h.step for h in result.steps]
     intelligence = [h.intelligence.score for h in result.steps]
@@ -113,7 +121,7 @@ def plot_component_evolution(
     Returns:
         matplotlib Figure object
     """
-    _check_matplotlib()
+    _, plt = _load_matplotlib()
 
     if components is None:
         components = ['A', 'B', 'C', 'X', 'Y', 'Z', 'E_n', 'F_n']
@@ -197,7 +205,7 @@ def plot_sensitivity_analysis(
     Returns:
         matplotlib Figure object
     """
-    _check_matplotlib()
+    _, plt = _load_matplotlib()
 
     if param_range is None:
         param_range = np.linspace(0.1, 1.0, 50)
@@ -268,7 +276,7 @@ def plot_scenario_comparison(
     Returns:
         matplotlib Figure object
     """
-    _check_matplotlib()
+    _, plt = _load_matplotlib()
 
     fig, ax = plt.subplots(figsize=figsize)
 
@@ -328,7 +336,7 @@ def plot_heatmap_2d(
     Returns:
         matplotlib Figure object
     """
-    _check_matplotlib()
+    _, plt = _load_matplotlib()
 
     if param_x_range is None:
         param_x_range = np.linspace(0.1, 1.0, 30)
@@ -406,7 +414,7 @@ def create_dashboard(
     Returns:
         matplotlib Figure object
     """
-    _check_matplotlib()
+    gridspec, plt = _load_matplotlib()
 
     steps = [h.step for h in result.steps]
     intelligence = [h.intelligence.score for h in result.steps]
