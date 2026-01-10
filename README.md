@@ -96,14 +96,35 @@ This repo turns that conceptual model into:
   - Code examples and best practices
 
 - **Web API** (`web/`)
-  - FastAPI REST endpoint
+  - FastAPI REST endpoint with OpenAPI docs
   - Interactive web UI
-  - Preset scenarios
+  - Preset scenarios (baseline, growth, decay, alignment, etc.)
   - Real-time visualization
+  - **NEW**: Rate limiting (20 req/min per IP)
+  - **NEW**: Optional API key authentication
+  - **NEW**: Structured JSON logging
+  - **NEW**: Health check endpoints
+  - **NEW**: CORS and security middleware
 
 - **MCP Integration** (`mcp/`)
   - Model Context Protocol server
   - Tool and resource endpoints
+
+- **Production Ready** 🆕
+  - **Docker support** with multi-stage builds
+  - **Docker Compose** for easy deployment
+  - **GitHub Actions CI/CD** pipeline
+  - **Pre-commit hooks** for code quality
+  - **Security scanning** with pip-audit
+  - **Type checking** with mypy
+  - **Linting** with ruff
+  - **Code formatting** with black
+  - **Comprehensive deployment guide**
+
+- **Example Extensions** (`extensions/examples/`) 🆕
+  - Momentum-based update rule
+  - Threshold alert event handler
+  - Extension development guide
 
 ### 🚧 Future Enhancements
 
@@ -181,6 +202,74 @@ The server exposes:
 
 - `compute_universal_axiom` tool for computing intelligence scores.
 - `axiom://universal/formula` resource for the core equation.
+
+## Deployment
+
+### Docker (Recommended)
+
+**Quick start with Docker Compose:**
+```bash
+# Build and run
+docker-compose up -d
+
+# Access at http://localhost:8000
+# API docs at http://localhost:8000/api/docs
+```
+
+**Manual Docker build:**
+```bash
+# Build image
+docker build -t epiphany-engine:latest .
+
+# Run container
+docker run -p 8000:8000 epiphany-engine:latest
+```
+
+### Production Deployment
+
+**With authentication:**
+```bash
+# Set environment variables
+export API_KEY_ENABLED=true
+export API_KEY=$(openssl rand -hex 32)
+export LOG_LEVEL=INFO
+
+# Run with Gunicorn
+gunicorn web.api:app \
+  --workers 4 \
+  --worker-class uvicorn.workers.UvicornWorker \
+  --bind 0.0.0.0:8000
+```
+
+**Development mode:**
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run with auto-reload
+uvicorn web.api:app --reload
+```
+
+### Pre-commit Hooks
+
+Install pre-commit hooks for automatic code quality checks:
+
+```bash
+pip install pre-commit
+pre-commit install
+
+# Run manually
+pre-commit run --all-files
+```
+
+**For complete deployment instructions**, see [DEPLOYMENT.md](DEPLOYMENT.md) covering:
+- Production setup with Nginx/Gunicorn
+- Systemd service configuration
+- SSL/TLS setup
+- Security hardening
+- Monitoring and logging
+- Cloud deployment (AWS, GCP, Azure)
+- Kubernetes deployment
 
 ## The Axiom Explained
 

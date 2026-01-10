@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: epiphany-engine-web
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+      # Optional: Enable API authentication
+      # - API_KEY_ENABLED=true
+      # - API_KEY=your-secret-key-here
+    volumes:
+      # Mount for development (comment out for production)
+      - ./axiom:/app/axiom
+      - ./engine:/app/engine
+      - ./web:/app/web
+      - ./viz:/app/viz
+      - ./mcp:/app/mcp
+      - ./extensions:/app/extensions
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: MCP Server (uncomment if needed)
+  # mcp:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: epiphany-engine-mcp
+  #   command: ["python", "-m", "mcp.server"]
+  #   environment:
+  #     - PYTHONUNBUFFERED=1
+  #   volumes:
+  #     - ./mcp:/app/mcp
+  #     - ./axiom:/app/axiom
+  #     - ./engine:/app/engine
+  #   restart: unless-stopped
+
+networks:
+  default:
+    name: epiphany-network
