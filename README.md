@@ -117,6 +117,19 @@ print(f"Final Intelligence: {result.summary['final_intelligence']:.4f}")
 print(f"Growth Rate: {result.summary['growth_rate']:.1%}")
 ```
 
+## MCP Server
+
+Run the Universal Axiom MCP server over stdio:
+
+```bash
+python -m mcp.server
+```
+
+The server exposes:
+
+- `compute_universal_axiom` tool for computing intelligence scores.
+- `axiom://universal/formula` resource for the core equation.
+
 ## The Axiom Explained
 
 The core equation models intelligence as the product of three dimensions:

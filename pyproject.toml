@@ -9,7 +9,7 @@ description = "The Epiphany Engine"
 requires-python = ">=3.9"
 
 [tool.setuptools.packages.find]
-include = ["engine*", "axiom*"]
+include = ["engine*", "axiom*", "mcp*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
