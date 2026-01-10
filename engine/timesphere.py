@@ -8,6 +8,7 @@ Allows systems to evolve over discrete time steps while tracking:
 - Corruption vs coherence trends
 """
 from dataclasses import dataclass, field
+import statistics
 from typing import Any, Callable, Dict, List, Optional
 
 from axiom.core_equation import compute_intelligence, e_recurrence, fibonacci
@@ -216,6 +217,15 @@ class TimeSphere:
 
         # Generate summary statistics
         intelligence_scores = [ts.intelligence.score for ts in history]
+        growth_rate = (
+            (intelligence_scores[-1] - intelligence_scores[0]) / intelligence_scores[0]
+            if intelligence_scores[0] != 0
+            else float("inf")
+        )
+        volatility = (
+            statistics.pstdev(intelligence_scores) if len(intelligence_scores) > 1 else 0.0
+        )
+
         summary = {
             "total_steps": steps,
             "initial_intelligence": intelligence_scores[0],
@@ -223,11 +233,9 @@ class TimeSphere:
             "max_intelligence": max(intelligence_scores),
             "min_intelligence": min(intelligence_scores),
             "avg_intelligence": sum(intelligence_scores) / len(intelligence_scores),
-            "growth_rate": (
-                (intelligence_scores[-1] - intelligence_scores[0]) / intelligence_scores[0]
-                if intelligence_scores[0] != 0
-                else float("inf")
-            ),
+            "growth_rate": growth_rate,
+            "total_growth_pct": growth_rate * 100,
+            "volatility": volatility,
         }
 
         self.history = history
