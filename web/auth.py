@@ -5,8 +5,8 @@ Provides optional API key and JWT-based authentication.
 """
 
 import os
-from datetime import datetime, timedelta
-from typing import Optional
+from datetime import datetime, timedelta, timezone
+from typing import List, Optional
 
 from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import APIKeyHeader, HTTPBearer, HTTPAuthorizationCredentials
@@ -18,9 +18,28 @@ from pydantic import BaseModel
 # Configuration from environment variables
 API_KEY_ENABLED = os.getenv("API_KEY_ENABLED", "false").lower() == "true"
 API_KEY = os.getenv("API_KEY", "")
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_MINUTES = int(os.getenv("JWT_EXPIRATION_MINUTES", "60"))
+
+# Validate configuration at module load
+if API_KEY_ENABLED and not API_KEY:
+    raise ValueError(
+        "API_KEY_ENABLED is true but API_KEY is not set. "
+        "Please set the API_KEY environment variable."
+    )
+
+if API_KEY_ENABLED and not JWT_SECRET_KEY:
+    raise ValueError(
+        "API_KEY_ENABLED is true but JWT_SECRET_KEY is not set. "
+        "Please set JWT_SECRET_KEY to a secure random value (minimum 32 characters)."
+    )
+
+if JWT_SECRET_KEY and len(JWT_SECRET_KEY) < 32:
+    raise ValueError(
+        "JWT_SECRET_KEY must be at least 32 characters long for security. "
+        "Please use a cryptographically secure random string."
+    )
 
 # Security schemes
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
@@ -31,7 +50,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class TokenData(BaseModel):
     """JWT token payload data."""
     username: Optional[str] = None
-    scopes: list[str] = []
+    scopes: List[str] = []
 
 
 class AuthConfig:
@@ -94,9 +113,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     to_encode = data.copy()
 
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=JWT_EXPIRATION_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=JWT_EXPIRATION_MINUTES)
 
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
