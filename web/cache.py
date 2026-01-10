@@ -141,12 +141,13 @@ def get_simulation_cache() -> SimulationCache:
     return _simulation_cache
 
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=1024)
 def cached_fibonacci(n: int) -> int:
     """
-    Cached Fibonacci sequence computation.
+    Cached Fibonacci sequence computation using iterative approach.
 
     Uses LRU cache for frequently accessed Fibonacci numbers.
+    Iterative implementation avoids recursion depth issues for large N.
 
     Args:
         n: Index in Fibonacci sequence
@@ -158,7 +159,12 @@ def cached_fibonacci(n: int) -> int:
         return 0
     if n == 1:
         return 1
-    return cached_fibonacci(n - 1) + cached_fibonacci(n - 2)
+
+    # Iterative approach - no recursion depth limits
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
 
 
 @lru_cache(maxsize=64)
