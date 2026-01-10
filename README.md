@@ -47,6 +47,8 @@ This repo turns that conceptual model into:
   - Corruption & decay: Intelligence collapse
   - Divergent paths: Comparing different strategies
   - AI alignment: Capability vs. values balance
+  - Resilience & recovery: Shock response and comeback
+  - Innovation cycles: Experimentation leading to breakthroughs
 
 - **Tests** (`tests/`)
   - Comprehensive unit tests for core equation
