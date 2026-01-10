@@ -7,8 +7,8 @@ momentum (rate of change) and accelerates growth or decay.
 
 from typing import Callable
 
-from extensions.base import UpdateRuleExtension
 from engine.state import SystemState
+from extensions.base import UpdateRuleExtension
 
 
 class MomentumUpdateRule(UpdateRuleExtension):

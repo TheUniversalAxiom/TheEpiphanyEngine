@@ -2,6 +2,7 @@
 Tests for axiom/core_equation.py
 """
 import sys
+
 from axiom.core_equation import (
     compute_intelligence,
     e_recurrence,

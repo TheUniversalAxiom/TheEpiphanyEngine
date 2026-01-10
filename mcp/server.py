@@ -9,7 +9,6 @@ from typing import Any, Dict, Optional
 
 from axiom.core_equation import compute_intelligence
 
-
 AXIOM_FORMULA = "Intelligence_n = E_n * (1 + F_n) * X * Y * Z * (A * B * C)"
 
 

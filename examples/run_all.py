@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import importlib.util
 
+
 def load_module_from_file(filepath, module_name):
     """Load a module from a file path."""
     spec = importlib.util.spec_from_file_location(module_name, filepath)

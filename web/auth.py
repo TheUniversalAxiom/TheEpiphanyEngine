@@ -8,12 +8,11 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 
-from fastapi import Depends, HTTPException, Security, status
-from fastapi.security import APIKeyHeader, HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import HTTPException, Security, status
+from fastapi.security import APIKeyHeader, HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
-
 
 # Configuration from environment variables
 API_KEY_ENABLED = os.getenv("API_KEY_ENABLED", "false").lower() == "true"

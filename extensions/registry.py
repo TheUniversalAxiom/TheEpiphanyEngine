@@ -2,7 +2,8 @@
 Extension registry for managing loaded extensions.
 """
 
-from typing import Dict, List, Type, Optional
+from typing import Dict, List, Optional, Type
+
 from .base import BaseExtension
 
 

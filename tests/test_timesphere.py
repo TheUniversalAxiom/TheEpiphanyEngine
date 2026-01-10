@@ -2,8 +2,9 @@
 Tests for engine/timesphere.py
 """
 import sys
-from engine.timesphere import TimeSphere, UpdateRules
+
 from engine.state import AxiomInputs
+from engine.timesphere import TimeSphere, UpdateRules
 
 
 def test_timesphere_initialization():

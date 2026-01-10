@@ -22,6 +22,11 @@ ignore = [
     "E501",   # Line too long (handled by black)
     "B008",   # Do not perform function calls in argument defaults
     "B904",   # Within except, raise from err
+    "UP006",  # Use lowercase types (requires Python 3.10+, we support 3.9+)
+    "UP035",  # Import from collections.abc (requires Python 3.10+, we support 3.9+)
+    "UP045",  # Use X | None syntax (requires Python 3.10+, we support 3.9+)
+    "N803",   # Argument name should be lowercase (axiom uses uppercase for mathematical variables)
+    "N806",   # Variable in function should be lowercase (axiom uses uppercase for mathematical variables)
 ]
 
 # Allow autofix for all enabled rules

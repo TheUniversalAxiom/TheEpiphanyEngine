@@ -4,8 +4,8 @@ Example 5: Resilience and Recovery Scenario
 Models a system that experiences a shock event but regains strength through
 re-alignment, process improvements, and renewed energy.
 """
-from engine.timesphere import TimeSphere, UpdateRules
 from engine.state import AxiomInputs
+from engine.timesphere import TimeSphere
 
 
 def shock_then_recover(variable, *, shock_step, drop_factor, recovery_rate, min_val=0.0, max_val=1.0):
@@ -92,13 +92,13 @@ def run_resilience_recovery_scenario():
     result = sphere.simulate(steps=10)
 
     print(f"\nSimulation completed: {result.summary['total_steps']} steps")
-    print(f"\nResilience Arc:")
+    print("\nResilience Arc:")
     print(f"  Initial: {result.summary['initial_intelligence']:.4f}")
     print(f"  Final:   {result.summary['final_intelligence']:.4f}")
     print(f"  Growth:  {result.summary['growth_rate']:.1%}")
     print(f"  Peak:    {result.summary['max_intelligence']:.4f}")
 
-    print(f"\nStep-by-Step Recovery:")
+    print("\nStep-by-Step Recovery:")
     print(
         f"{'Step':>4} | {'I_n':>10} | {'ABC':>6} | {'XYZ':>6} | {'E_n':>6} | {'F_n':>6} | Events"
     )
@@ -114,7 +114,7 @@ def run_resilience_recovery_scenario():
         )
 
     trends = sphere.analyze_trends()
-    print(f"\nTrend Analysis:")
+    print("\nTrend Analysis:")
     print(f"  Overall trend: {trends['trend']}")
     print(f"  Total events: {trends['total_events']}")
     print(f"  Volatility: {trends['score_volatility']:.4f}")

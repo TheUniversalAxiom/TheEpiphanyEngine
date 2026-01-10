@@ -1,22 +1,22 @@
-import logging
 import os
 import time
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
-from fastapi import FastAPI, Request, Depends, HTTPException, status
-from fastapi.staticfiles import StaticFiles
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 from engine.state import AxiomInputs
 from engine.timesphere import TimeSphere, UpdateRules
-from web.auth import verify_api_key, AuthConfig
-from web.logging_config import setup_logging, get_logger, LogContext
+from web.auth import AuthConfig, verify_api_key
+from web.cache import get_simulation_cache
+from web.logging_config import LogContext, get_logger, setup_logging
+from web.security import SecurityHeadersMiddleware, get_hsts_enabled
 
 # Setup structured logging
 setup_logging()
@@ -79,6 +79,12 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization", "X-API-Key"],
+)
+
+# Add security headers middleware
+app.add_middleware(
+    SecurityHeadersMiddleware,
+    enable_hsts=get_hsts_enabled(),
 )
 
 
@@ -164,6 +170,31 @@ def health_check():
     }
 
 
+@app.get("/api/cache/stats")
+def get_cache_stats():
+    """
+    Get cache statistics for performance monitoring.
+
+    Returns cache hit rates and utilization metrics.
+    """
+    from web.cache import get_cache_stats
+
+    return get_cache_stats()
+
+
+@app.post("/api/cache/clear")
+def clear_cache(authenticated: bool = Depends(verify_api_key)):
+    """
+    Clear all caches (requires authentication).
+
+    Only available when authentication is enabled.
+    """
+    from web.cache import clear_all_caches
+
+    clear_all_caches()
+    return {"status": "success", "message": "All caches cleared"}
+
+
 @app.get("/api/info")
 def get_info():
     """
@@ -183,6 +214,8 @@ def get_info():
             "ai-alignment",
         ],
         "default_preset": PRESET_DEFAULT,
+        "cache_enabled": True,
+        "cache_ttl_seconds": 3600,
         "rate_limits": {
             "default": "100 requests per hour per IP",
             "simulate": "20 requests per minute per IP",
@@ -271,12 +304,31 @@ def simulate(
         HTTPException: If parameters are invalid or simulation fails
     """
     try:
+        # Check cache first
+        cache = get_simulation_cache()
+        cache_key_data = request.dict()
+        cached_result = cache.get(cache_key_data)
+
+        if cached_result is not None:
+            logger.info(
+                "Returning cached simulation result",
+                extra={
+                    "extra_fields": {
+                        "preset": request.preset or PRESET_DEFAULT,
+                        "steps": request.steps,
+                        "cache_hit": True,
+                    }
+                },
+            )
+            return SimulationResponse(**cached_result)
+
         logger.info(
             "Starting simulation",
             extra={
                 "extra_fields": {
                     "preset": request.preset or PRESET_DEFAULT,
                     "steps": request.steps,
+                    "cache_hit": False,
                 }
             },
         )
@@ -310,13 +362,18 @@ def simulate(
             },
         )
 
-        return SimulationResponse(
+        response = SimulationResponse(
             steps=payload["steps"],
             summary=payload["summary"],
             intelligence_history=result.intelligence_history(),
             selected_preset=selected_preset,
             preset_fallback=preset_fallback,
         )
+
+        # Cache the result
+        cache.set(cache_key_data, response.dict())
+
+        return response
 
     except ValueError as e:
         logger.error(f"Invalid simulation parameters: {str(e)}", exc_info=True)

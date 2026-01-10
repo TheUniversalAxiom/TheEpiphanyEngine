@@ -7,9 +7,9 @@ Compares two systems starting from identical conditions:
 
 Demonstrates how different update rules lead to vastly different outcomes.
 """
-from engine.timesphere import TimeSphere, UpdateRules
-from engine.state import AxiomInputs
 from axiom.subjectivity_scale import label_x
+from engine.state import AxiomInputs
+from engine.timesphere import TimeSphere, UpdateRules
 
 
 def run_divergent_paths_scenario():
@@ -95,14 +95,14 @@ def run_divergent_paths_scenario():
     print("FINAL OUTCOMES")
     print("=" * 70)
 
-    print(f"\nSystem A (Steady Path):")
+    print("\nSystem A (Steady Path):")
     print(f"  Final Intelligence: {result_a.summary['final_intelligence']:.4f}")
     print(f"  Growth Rate: {result_a.summary['growth_rate']:+.1%}")
     print(f"  Peak Intelligence: {result_a.summary['max_intelligence']:.4f}")
     final_a_x = result_a.steps[-1].intelligence.components["X"]
     print(f"  Final Objectivity: {final_a_x:.3f} ({label_x(final_a_x)})")
 
-    print(f"\nSystem B (Volatile Path):")
+    print("\nSystem B (Volatile Path):")
     print(f"  Final Intelligence: {result_b.summary['final_intelligence']:.4f}")
     print(f"  Growth Rate: {result_b.summary['growth_rate']:+.1%}")
     print(f"  Peak Intelligence: {result_b.summary['max_intelligence']:.4f}")
@@ -113,7 +113,7 @@ def run_divergent_paths_scenario():
     divergence = result_a.summary["final_intelligence"] - result_b.summary["final_intelligence"]
     divergence_pct = (divergence / result_b.summary["final_intelligence"]) * 100
 
-    print(f"\nDivergence:")
+    print("\nDivergence:")
     print(f"  Absolute: {divergence:.4f}")
     print(f"  Relative: {divergence_pct:.1f}%")
     print(f"  Winner: {'System A' if divergence > 0 else 'System B'}")
