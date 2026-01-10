@@ -136,3 +136,5 @@ The core equation models intelligence as the product of three dimensions:
   - **F_n**: Feedback loops and iteration
 
 **Key Insight**: Intelligence is multiplicative. A system with high capability (B) but low alignment (A) will have low intelligence. Similarly, high objectivity (X) amplifies everything else.
+
+Intelligence_n = E_n * (1 + F_n) * X * Y * Z * (A * B * C)
