@@ -26,6 +26,8 @@ class SimulationResponse(BaseModel):
     steps: List[Dict[str, Any]]
     summary: Dict[str, Any]
     intelligence_history: List[float]
+    selected_preset: str
+    preset_fallback: bool
 
 
 app = FastAPI(title="Epiphany Engine API")
@@ -33,7 +35,11 @@ app = FastAPI(title="Epiphany Engine API")
 PRESET_DEFAULT = "baseline"
 
 
-def apply_preset_rules(sphere: TimeSphere, preset: str, request: SimulationRequest) -> str:
+def apply_preset_rules(
+    sphere: TimeSphere,
+    preset: str,
+    request: SimulationRequest,
+) -> tuple[str, bool]:
     presets = {
         "baseline": lambda: [
             sphere.add_update_rule(var, UpdateRules.constant(getattr(request, var)))
@@ -79,8 +85,9 @@ def apply_preset_rules(sphere: TimeSphere, preset: str, request: SimulationReque
     }
 
     selected_preset = preset if preset in presets else PRESET_DEFAULT
+    preset_fallback = selected_preset != preset
     presets[selected_preset]()
-    return selected_preset
+    return selected_preset, preset_fallback
 
 
 @app.post("/api/simulate", response_model=SimulationResponse)
@@ -96,13 +103,19 @@ def simulate(request: SimulationRequest) -> SimulationResponse:
         F_n=request.F_n,
     )
     sphere = TimeSphere(initial_inputs=inputs)
-    apply_preset_rules(sphere, request.preset or PRESET_DEFAULT, request)
+    selected_preset, preset_fallback = apply_preset_rules(
+        sphere,
+        request.preset or PRESET_DEFAULT,
+        request,
+    )
     result = sphere.simulate(steps=request.steps)
     payload = result.to_dict()
     return SimulationResponse(
         steps=payload["steps"],
         summary=payload["summary"],
         intelligence_history=result.intelligence_history(),
+        selected_preset=selected_preset,
+        preset_fallback=preset_fallback,
     )
 
 
