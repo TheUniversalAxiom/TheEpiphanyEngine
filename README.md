@@ -148,7 +148,7 @@ Project Intelligence Score: **3.20** (increased 5453% through axiom-guided devel
 python examples/run_all.py
 
 # Run all tests
-python tests/run_all_tests.py
+pytest tests/ -v
 
 # Analyze project intelligence
 python axiom_analysis.py

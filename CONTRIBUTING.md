@@ -84,7 +84,7 @@ pip install pytest pytest-cov black ruff mypy
 
 ```bash
 # Run tests
-python tests/run_all_tests.py
+pytest tests/ -v
 
 # Run examples
 python examples/run_all.py
@@ -245,7 +245,7 @@ def test_feature_behavior():
 
 ```bash
 # Run all tests
-python tests/run_all_tests.py
+pytest tests/ -v
 
 # Run specific test file
 pytest tests/test_core_equation.py -v
@@ -319,7 +319,7 @@ When adding new features:
    ruff check .
 
    # Run tests
-   python tests/run_all_tests.py
+   pytest tests/ -v
 
    # Type checking
    mypy axiom/ engine/
