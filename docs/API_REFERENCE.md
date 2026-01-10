@@ -35,8 +35,11 @@ def compute_intelligence(
     Z: float,
     E_n: float,
     F_n: float,
-    clamp_values: bool = True,
-    return_components: bool = False
+    validate: bool = True,
+    clamp_to_unit: bool = True,
+    return_components: bool = False,
+    strict_bounds: bool = False,
+    clamp_values: Optional[bool] = None
 ) -> Union[float, Tuple[float, Dict[str, float]]]
 ```
 
@@ -49,8 +52,11 @@ def compute_intelligence(
 - `Z` (float): Zugehörigkeit (Belonging) [0, 1]
 - `E_n` (float): Experience/Energy at step n [≥0]
 - `F_n` (float): Fibonacci factor [≥-1]
-- `clamp_values` (bool): If True, clamp out-of-range values; if False, raise ValueError
+- `validate` (bool): If True, enforce numeric type/finite checks
+- `clamp_to_unit` (bool): If True, clamp out-of-range values to bounds
 - `return_components` (bool): If True, return tuple with components breakdown
+- `strict_bounds` (bool): If True, raise ValueError when values are out of bounds
+- `clamp_values` (Optional[bool]): Deprecated alias for `clamp_to_unit`
 
 **Returns:**
 - If `return_components=False`: Intelligence score (float)
@@ -692,7 +698,7 @@ curl -X POST http://localhost:8000/api/simulate \
 #### `ValueError`
 
 Raised when:
-- Parameters are out of bounds (with `clamp_values=False`)
+- Parameters are out of bounds (with `strict_bounds=True`)
 - Invalid Fibonacci index (negative)
 - Invalid configuration
 
@@ -713,7 +719,7 @@ Raised when:
 ## Best Practices
 
 1. **Always use `return_components=True`** when analyzing results
-2. **Enable clamping** for robustness: `clamp_values=True`
+2. **Enable clamping** for robustness: `clamp_to_unit=True`
 3. **Use event handlers** for milestone detection
 4. **Export results** for reproducibility
 5. **Benchmark** custom update rules before deploying

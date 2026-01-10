@@ -198,7 +198,7 @@ def compute_intelligence(
         Intelligence score as float
 
     Raises:
-        ValueError: If parameters are out of bounds and clamp_values=False
+        ValueError: If parameters are out of bounds and strict_bounds=True
 
     Example:
         >>> score = compute_intelligence(A=0.7, B=0.7, C=0.7,

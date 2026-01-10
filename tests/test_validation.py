@@ -50,7 +50,7 @@ class TestInputValidation:
             X=0.7, Y=0.7, Z=0.7,
             E_n=-5.0,  # Should be clamped to 0
             F_n=3.0,
-            clamp_values=True
+            clamp_to_unit=True
         )
         # With E_n = 0, result should be 0
         assert result == 0.0
@@ -62,7 +62,7 @@ class TestInputValidation:
             X=0.7, Y=0.7, Z=0.7,
             E_n=5.0,
             F_n=-2.0,  # Below minimum
-            clamp_values=True
+            clamp_to_unit=True
         )
         # Should clamp to -1 minimum
         assert result >= 0.0
@@ -75,7 +75,7 @@ class TestInputValidation:
             C=0.7,
             X=0.7, Y=0.7, Z=0.7,
             E_n=5.0, F_n=3.0,
-            clamp_values=True,
+            clamp_to_unit=True,
             return_components=True
         )
         # Check that clamping occurred
@@ -90,7 +90,7 @@ class TestInputValidation:
                 B=0.7, C=0.7,
                 X=0.7, Y=0.7, Z=0.7,
                 E_n=5.0, F_n=3.0,
-                clamp_values=False
+                strict_bounds=True
             )
 
     def test_nan_handling(self):
@@ -101,7 +101,7 @@ class TestInputValidation:
             X=math.nan,  # Invalid input
             Y=0.7, Z=0.7,
             E_n=5.0, F_n=3.0,
-            clamp_values=True
+            clamp_to_unit=True
         )
         # With NaN, result should be NaN
         assert math.isnan(result)
@@ -114,7 +114,7 @@ class TestInputValidation:
             X=0.7, Y=0.7, Z=0.7,
             E_n=math.inf,
             F_n=3.0,
-            clamp_values=True
+            clamp_to_unit=True
         )
         # Result should be infinite
         assert math.isinf(result)

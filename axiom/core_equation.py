@@ -8,7 +8,7 @@ Implements:
 - optional symbolic representation using sympy (if available)
 """
 import math
-from typing import Dict, Iterable, Tuple, Union
+from typing import Dict, Iterable, Optional, Tuple, Union
 
 Number = Union[int, float]
 
@@ -72,6 +72,7 @@ def compute_intelligence(
     clamp_to_unit: bool = True,
     return_components: bool = False,
     strict_bounds: bool = False,
+    clamp_values: Optional[bool] = None,
 ) -> Union[float, Tuple[float, Dict[str, float]]]:
     """
     Compute the EPIPHANY core axiom:
@@ -86,11 +87,15 @@ def compute_intelligence(
     clamp_to_unit : if True, clamp A/B/C/X/Y to [0,1] and Z/E_n >= 0, F_n >= -1.
     return_components : if True return (score, components_dict).
     strict_bounds : if True, raise ValueError when values fall outside expected ranges.
+    clamp_values : deprecated alias for clamp_to_unit.
 
     Returns
     -------
     float or (float, dict)
     """
+    if clamp_values is not None:
+        clamp_to_unit = clamp_values
+
     inputs = dict(A=A, B=B, C=C, X=X, Y=Y, Z=Z, E_n=E_n, F_n=F_n)
 
     if validate:
