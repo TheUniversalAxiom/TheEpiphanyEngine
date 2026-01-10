@@ -4,17 +4,36 @@ Complete API documentation for The EPIPHANY Engine.
 
 ## Table of Contents
 
-1. [Core Equation](#core-equation)
-2. [Subjectivity Scale](#subjectivity-scale)
-3. [TimeSphere Engine](#timesphere-engine)
-4. [State Management](#state-management)
-5. [Update Rules](#update-rules)
-6. [Visualization](#visualization)
-7. [Export Utilities](#export-utilities)
-8. [Extensions](#extensions)
-9. [Benchmarks](#benchmarks)
+1. [REST API Endpoints](#rest-api-endpoints)
+2. [Core Equation](#core-equation)
+3. [Subjectivity Scale](#subjectivity-scale)
+4. [TimeSphere Engine](#timesphere-engine)
+5. [State Management](#state-management)
+6. [Update Rules](#update-rules)
+7. [Visualization](#visualization)
+8. [Export Utilities](#export-utilities)
+9. [Extensions](#extensions)
+10. [Benchmarks](#benchmarks)
 
 ---
+
+## REST API Endpoints
+
+### `GET /`
+
+Root endpoint that returns the API overview.
+
+**Response:**
+```json
+{
+  "name": "Epiphany Engine API",
+  "version": "0.1.0",
+  "status": "ok",
+  "docs_url": "/api/docs",
+  "health_url": "/api/health",
+  "info_url": "/api/info"
+}
+```
 
 ## Core Equation
 
