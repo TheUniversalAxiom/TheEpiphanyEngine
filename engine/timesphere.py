@@ -139,8 +139,9 @@ class TimeSphere:
         new_inputs = AxiomInputs(**new_inputs_dict)
 
         # Compute intelligence with components
-        intelligence_score, components = compute_intelligence(
-            **new_inputs.to_dict(), return_components=True
+        # Mypy doesn't understand the conditional return type
+        intelligence_score, components = compute_intelligence(  # type: ignore[misc]
+            **new_inputs.to_dict(), return_components=True  # type: ignore[arg-type]
         )
 
         # Create new state
@@ -187,8 +188,9 @@ class TimeSphere:
         current_state = self.initial_state
 
         # Record initial state
-        initial_score, initial_components = compute_intelligence(
-            **current_state.inputs.to_dict(), return_components=True
+        # Mypy doesn't understand the conditional return type
+        initial_score, initial_components = compute_intelligence(  # type: ignore[misc]
+            **current_state.inputs.to_dict(), return_components=True  # type: ignore[arg-type]
         )
         initial_snapshot = IntelligenceSnapshot(
             step=0, score=initial_score, components=initial_components

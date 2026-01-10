@@ -6,7 +6,7 @@ alerts when intelligence or component values cross thresholds.
 """
 
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Set
 
 from extensions.base import EventHandlerExtension
 
@@ -23,8 +23,8 @@ class ThresholdAlertHandler(EventHandlerExtension):
 
     def __init__(
         self,
-        intelligence_thresholds: List[float] = None,
-        component_thresholds: Dict[str, List[float]] = None,
+        intelligence_thresholds: Optional[List[float]] = None,
+        component_thresholds: Optional[Dict[str, List[float]]] = None,
     ):
         """
         Initialize threshold alert handler.
@@ -33,12 +33,12 @@ class ThresholdAlertHandler(EventHandlerExtension):
             intelligence_thresholds: List of intelligence values to monitor
             component_thresholds: Dict mapping variable names to threshold lists
         """
-        super().__init__()
+        super().__init__(name="threshold_alert")
         self.intelligence_thresholds = intelligence_thresholds or []
         self.component_thresholds = component_thresholds or {}
-        self._triggered_intelligence = set()
-        self._triggered_components = {var: set() for var in self.component_thresholds}
-        self.alerts = []
+        self._triggered_intelligence: Set[str] = set()
+        self._triggered_components: Dict[str, Set[str]] = {var: set() for var in self.component_thresholds}
+        self.alerts: List[Dict[str, Any]] = []
 
     def handle_event(self, event_type: str, data: Dict[str, Any]) -> None:
         """
@@ -110,7 +110,25 @@ class ThresholdAlertHandler(EventHandlerExtension):
             self._triggered_components[var].clear()
         self.alerts.clear()
 
-    def get_metadata(self) -> dict:
+    def initialize(self) -> None:
+        """Initialize the extension."""
+        logger.info(f"Initializing {self.name} extension")
+
+    def get_event_handlers(self) -> Dict[str, Any]:
+        """Get event handlers."""
+        return {
+            "step_complete": self.handle_event,
+            "simulation_complete": self.handle_event,
+        }
+
+    def get_event_types(self) -> Dict[str, str]:
+        """Get event type descriptions."""
+        return {
+            "step_complete": "Triggered after each simulation step",
+            "simulation_complete": "Triggered when simulation completes",
+        }
+
+    def get_metadata(self) -> Dict[str, Any]:
         """Get extension metadata."""
         return {
             "name": "ThresholdAlertHandler",

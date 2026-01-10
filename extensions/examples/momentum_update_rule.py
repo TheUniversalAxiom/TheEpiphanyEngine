@@ -5,7 +5,7 @@ Demonstrates how to create a custom update rule that tracks
 momentum (rate of change) and accelerates growth or decay.
 """
 
-from typing import Callable
+from typing import Callable, Dict, Optional
 
 from engine.state import SystemState
 from extensions.base import UpdateRuleExtension
@@ -37,7 +37,7 @@ class MomentumUpdateRule(UpdateRuleExtension):
             min_val: Minimum allowed value
             max_val: Maximum allowed value
         """
-        super().__init__()
+        super().__init__(name=f"momentum_{variable}")
         self.variable = variable
         self.momentum_factor = momentum_factor
         self.acceleration = acceleration
@@ -46,7 +46,7 @@ class MomentumUpdateRule(UpdateRuleExtension):
         self._previous_value = None
         self._velocity = 0.0
 
-    def get_update_rule(self, variable: str) -> Callable[[SystemState], float]:
+    def get_update_rule(self, variable: str) -> Optional[Callable[[SystemState], float]]:
         """
         Generate update rule function for the specified variable.
 
@@ -54,7 +54,7 @@ class MomentumUpdateRule(UpdateRuleExtension):
             variable: Variable name to generate rule for
 
         Returns:
-            Update function that applies momentum
+            Update function that applies momentum, or None if variable doesn't match
         """
         if variable != self.variable:
             return None
@@ -66,7 +66,7 @@ class MomentumUpdateRule(UpdateRuleExtension):
             # Initialize on first call
             if self._previous_value is None:
                 self._previous_value = current_value
-                return current_value
+                return float(current_value)
 
             # Calculate velocity (rate of change)
             delta = current_value - self._previous_value
@@ -87,7 +87,24 @@ class MomentumUpdateRule(UpdateRuleExtension):
 
         return momentum_update
 
-    def get_metadata(self) -> dict:
+    def initialize(self) -> None:
+        """Initialize the extension."""
+        pass
+
+    def get_update_rules(self) -> Dict[str, Callable]:
+        """Get update rules."""
+        rule = self.get_update_rule(self.variable)
+        if rule:
+            return {self.variable: rule}
+        return {}
+
+    def get_rule_descriptions(self) -> Dict[str, str]:
+        """Get rule descriptions."""
+        return {
+            self.variable: f"Momentum-based update with factor {self.momentum_factor} and acceleration {self.acceleration}"
+        }
+
+    def get_metadata(self) -> Dict:
         """Get extension metadata."""
         return {
             "name": "MomentumUpdateRule",
@@ -128,4 +145,7 @@ def create_momentum_rule(
         >>> result = sphere.simulate(steps=50)
     """
     ext = MomentumUpdateRule(variable, momentum_factor, acceleration)
-    return ext.get_update_rule(variable)
+    rule = ext.get_update_rule(variable)
+    if rule is None:
+        raise ValueError(f"Failed to create update rule for variable {variable}")
+    return rule

@@ -9,7 +9,7 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 
 class JSONFormatter(logging.Formatter):
@@ -57,7 +57,7 @@ class JSONFormatter(logging.Formatter):
         return json.dumps(log_data)
 
 
-def setup_logging(log_level: str = None) -> logging.Logger:
+def setup_logging(log_level: Optional[str] = None) -> logging.Logger:
     """
     Configure structured logging for the application.
 
@@ -68,7 +68,7 @@ def setup_logging(log_level: str = None) -> logging.Logger:
         Configured root logger
     """
     # Get log level from environment or parameter
-    level_name = log_level or os.getenv("LOG_LEVEL", "INFO")
+    level_name: str = log_level or os.getenv("LOG_LEVEL", "INFO") or "INFO"
     level = getattr(logging, level_name.upper(), logging.INFO)
 
     # Configure root logger

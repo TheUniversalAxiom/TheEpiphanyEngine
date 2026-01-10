@@ -1,6 +1,11 @@
 # The EPIPHANY Engine ⚡️ Quantum AI
 
-> An open-source implementation of **The Universal Axiom Organic Intelligence Model** (“The Axiom”) – a physics-style framework for modeling and evolving intelligence over time.
+[![CI/CD Pipeline](https://github.com/TheUniversalAxiom/TheEpiphanyEngine/actions/workflows/ci.yml/badge.svg)](https://github.com/TheUniversalAxiom/TheEpiphanyEngine/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/TheUniversalAxiom/TheEpiphanyEngine/branch/main/graph/badge.svg)](https://codecov.io/gh/TheUniversalAxiom/TheEpiphanyEngine)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> An open-source implementation of **The Universal Axiom Organic Intelligence Model** ("The Axiom") – a physics-style framework for modeling and evolving intelligence over time.
 
 ## What is this?
 

@@ -6,7 +6,7 @@ Provides optional API key and JWT-based authentication.
 
 import os
 from datetime import datetime, timedelta, timezone
-from typing import List, Optional
+from typing import List, Optional, cast
 
 from fastapi import HTTPException, Security, status
 from fastapi.security import APIKeyHeader, HTTPAuthorizationCredentials, HTTPBearer
@@ -119,7 +119,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
 
-    return encoded_jwt
+    return cast(str, encoded_jwt)
 
 
 def verify_token(credentials: HTTPAuthorizationCredentials = Security(bearer_scheme)) -> TokenData:
@@ -169,9 +169,9 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Security(bearer_sch
 
 def get_password_hash(password: str) -> str:
     """Hash a password using bcrypt."""
-    return pwd_context.hash(password)
+    return cast(str, pwd_context.hash(password))
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against its hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    return cast(bool, pwd_context.verify(plain_password, hashed_password))
